@@ -1,0 +1,8 @@
+# 환경변수 파일 (민감 정보 포함)
+.env
+
+# Claude Code 로컬 설정
+.claude/settings.local.json
+
+# macOS
+.DS_Store
