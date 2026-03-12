@@ -17,8 +17,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Web Starter Kit",
-  description: "Spring Boot + Next.js 풀스택 스타터킷 — Docker, HTTPS, 다크모드 사전 구성",
+  title: "캡슐 커피 커뮤니티",
+  description: "네스프레소, 돌체구스토, 버츄오 캡슐 정보 및 리뷰 커뮤니티",
 };
 
 export default function RootLayout({

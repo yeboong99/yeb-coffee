@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu } from "lucide-react";
+import { Menu, Search } from "lucide-react";
 import { ThemeToggle } from "./theme-toggle";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,10 +16,8 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 
 const navLinks = [
-  { href: "/", label: "Home" },
-  { href: "/examples", label: "Examples" },
-  { href: "/docs", label: "Docs" },
-  { href: "/status", label: "Status" },
+  { href: "/brands", label: "브랜드 탐색" },
+  { href: "/community", label: "커뮤니티" },
 ];
 
 export function Navbar() {
@@ -31,8 +29,8 @@ export function Navbar() {
       <div className="mx-auto flex h-14 max-w-6xl items-center px-4">
         {/* 로고 */}
         <Link href="/" className="mr-8 flex items-center gap-2 font-semibold">
-          <span className="text-primary">⬡</span>
-          <span>Starter Kit</span>
+          <span className="text-primary">☕</span>
+          <span>캡슐 커피</span>
         </Link>
 
         {/* 데스크톱 네비게이션 */}
@@ -43,7 +41,7 @@ export function Navbar() {
               href={href}
               className={cn(
                 "px-3 py-1.5 rounded-md text-sm transition-colors hover:text-foreground hover:bg-accent",
-                pathname === href
+                pathname === href || pathname.startsWith(href + "/")
                   ? "text-foreground font-medium bg-accent"
                   : "text-muted-foreground"
               )}
@@ -55,6 +53,9 @@ export function Navbar() {
 
         {/* 우측 */}
         <div className="ml-auto flex items-center gap-2">
+          <Button variant="ghost" size="icon" aria-label="검색" disabled>
+            <Search className="h-4 w-4" />
+          </Button>
           <ThemeToggle />
           {/* 모바일 메뉴 */}
           <Sheet open={open} onOpenChange={setOpen}>
@@ -75,7 +76,7 @@ export function Navbar() {
                     onClick={() => setOpen(false)}
                     className={cn(
                       "px-3 py-2 rounded-md text-sm transition-colors hover:bg-accent",
-                      pathname === href
+                      pathname === href || pathname.startsWith(href + "/")
                         ? "font-medium bg-accent"
                         : "text-muted-foreground"
                     )}
