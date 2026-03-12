@@ -1,7 +1,7 @@
 ---
 name: prd-to-roadmap
 description: "사용자가 제품 요구사항 문서(PRD) 또는 제품 명세서를 제공하고 이를 개발팀이 실제로 따를 수 있는 구조화된 실행 가능한 ROADMAP.md 파일로 변환해야 할 때 이 에이전트를 사용하세요. 사용자가 기능을 마일스톤으로 분해하거나, 개발 단계를 우선순위화하거나, 작업량을 추정하거나, 제품 요구사항으로부터 명확한 실행 계획을 작성하려는 경우도 포함됩니다.\n\n<example>\n상황: 사용자가 캡슐 커피 커뮤니티 프로젝트의 PRD를 작성하거나 붙여넣고 개발 로드맵을 원하는 경우.\nuser: \"여기 캡슐 커피 커뮤니티 플랫폼 PRD입니다: [PRD 내용]. 이걸 로드맵으로 만들어줄 수 있나요?\"\nassistant: \"prd-to-roadmap 에이전트를 사용해 PRD를 분석하고 포괄적인 ROADMAP.md 파일을 생성하겠습니다.\"\n<commentary>\n사용자가 PRD를 제공하고 명시적으로 로드맵을 요청했습니다. prd-to-roadmap 에이전트를 실행하여 분석 및 ROADMAP.md를 생성합니다.\n</commentary>\n</example>\n\n<example>\n상황: 사용자가 기능 목록을 가지고 있고 이를 개발 계획으로 정리하고 싶은 경우.\nuser: \"Notion 기반 커뮤니티 사이트에 이 기능들을 구축해야 합니다. 요구사항은 다음과 같습니다... 이를 제대로 된 로드맵으로 만들어줄 수 있나요?\"\nassistant: \"prd-to-roadmap 에이전트를 실행하여 요구사항을 구조화된 ROADMAP.md로 변환하겠습니다.\"\n<commentary>\n요구사항이 제공되고 로드맵이 요청되었습니다. prd-to-roadmap 에이전트를 사용합니다.\n</commentary>\n</example>\n\n<example>\n상황: 사용자가 명시적으로 로드맵을 요청하지 않았지만 PRD 문서를 붙여넣고 개발을 시작하기 위해 방향이 필요한 경우.\nuser: \"PRD 문서가 여기 있습니다. 개발을 시작할 준비는 되었는데 어디서부터 시작해야 할지 모르겠어요.\"\nassistant: \"prd-to-roadmap 에이전트를 사용해 PRD를 분석하고 팀이 따를 수 있는 실행 가능한 ROADMAP.md를 작성하겠습니다.\"\n<commentary>\n사용자에게 PRD가 있고 개발 방향이 필요합니다. prd-to-roadmap 에이전트를 사전에 적극적으로 사용하여 구조화된 계획을 생성합니다.\n</commentary>\n</example>"
-model: sonnet
+model: opus
 color: pink
 memory: project
 ---
