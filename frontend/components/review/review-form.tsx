@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { TurnstileWidget } from "@/components/ui/turnstile-widget";
 import { StarRating } from "./star-rating";
 import { createReview } from "@/lib/api";
 import { toast } from "sonner";
@@ -29,6 +30,8 @@ interface ReviewFormProps {
 export function ReviewForm({ capsuleId, capsuleSlug, onSuccess }: ReviewFormProps) {
   const [rating, setRating] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  // Cloudflare Turnstile 인증 토큰 상태
+  const [turnstileToken, setTurnstileToken] = useState<string>("");
 
   const {
     register,
@@ -42,6 +45,12 @@ export function ReviewForm({ capsuleId, capsuleSlug, onSuccess }: ReviewFormProp
   });
 
   const onSubmit = async (values: FormValues) => {
+    // Turnstile 인증 토큰이 없으면 제출 차단
+    if (!turnstileToken) {
+      toast.error("CAPTCHA 인증을 완료해주세요.");
+      return;
+    }
+
     setIsSubmitting(true);
     try {
       await createReview({
@@ -50,11 +59,12 @@ export function ReviewForm({ capsuleId, capsuleSlug, onSuccess }: ReviewFormProp
         authorNickname: values.authorNickname,
         rating: values.rating as 1 | 2 | 3 | 4 | 5,
         content: values.content,
-        turnstileToken: "dev-bypass", // TODO: Turnstile 위젯 연동
+        turnstileToken,
       });
       toast.success("리뷰가 등록되었습니다.");
       reset();
       setRating(0);
+      setTurnstileToken("");
       onSuccess?.();
     } catch {
       toast.error("리뷰 등록에 실패했습니다. 다시 시도해주세요.");
@@ -101,7 +111,22 @@ export function ReviewForm({ capsuleId, capsuleSlug, onSuccess }: ReviewFormProp
         )}
       </div>
 
-      <Button type="submit" disabled={isSubmitting} className="w-full">
+      {/* Cloudflare Turnstile CAPTCHA 위젯 */}
+      <div className="space-y-1.5">
+        <TurnstileWidget
+          onSuccess={setTurnstileToken}
+          onError={() => {
+            setTurnstileToken("");
+            toast.error("CAPTCHA 인증에 실패했습니다. 다시 시도해주세요.");
+          }}
+          onExpire={() => {
+            setTurnstileToken("");
+            toast.error("CAPTCHA 인증이 만료되었습니다. 다시 인증해주세요.");
+          }}
+        />
+      </div>
+
+      <Button type="submit" disabled={isSubmitting || !turnstileToken} className="w-full">
         {isSubmitting ? "등록 중..." : "리뷰 등록"}
       </Button>
     </form>
