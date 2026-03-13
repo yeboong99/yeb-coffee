@@ -9,7 +9,7 @@
 - **배포**: Vercel
 - **스팸 방지**: Cloudflare Turnstile (CAPTCHA)
 
-현재 MVP 초기 구조가 완료된 상태로, 모든 페이지가 placeholder 데이터로 구현되어 있습니다. 이 로드맵은 placeholder 데이터를 실제 외부 서비스와 연동하여 프로덕션 서비스를 완성하는 과정을 안내합니다.
+Phase 0(환경 설정)과 Phase 1(공통 모듈 구성)이 완료된 상태입니다. 외부 서비스 환경 변수가 모두 설정되었고, Supabase 테이블/RLS, Notion 조회 함수, Turnstile 위젯 및 3개 폼 연동이 완료되었습니다. 다음 단계는 Phase 2(CMS 페이지 실데이터 연동)입니다.
 
 ---
 
@@ -25,14 +25,18 @@
 - Notion 클라이언트 및 DB ID 상수 (`frontend/lib/notion.ts`)
 - Supabase 브라우저/서버 클라이언트 팩토리 (`frontend/lib/supabase.ts`)
 - 프론트엔드 fetch 함수: `createReview`, `getReviews`, `createPost`, `getPosts`, `createComment`, `getComments` (`frontend/lib/api.ts`)
+- **(Phase 0 완료)** 모든 외부 서비스 환경 변수 설정 완료 (Notion, Supabase, Turnstile)
+- **(Phase 1 완료)** Supabase 테이블 3개 생성 + RLS + comment_count 트리거
+- **(Phase 1 완료)** Notion 조회 함수: `getBrands()`, `getBrandBySlug()`, `getCapsulesByBrandId()`, `getCapsuleBySlug()`
+- **(Phase 1 완료)** Turnstile React 위젯 컴포넌트 (`TurnstileWidget`) 및 3개 폼(리뷰, 게시글, 댓글)에 연동 완료
 
 ### 미완료 (placeholder 상태인 것)
 
-- Notion CMS 연동: 브랜드/캡슐 페이지가 하드코딩된 배열 데이터 사용 중
-- Supabase 테이블 미생성: `reviews`, `posts`, `comments` 테이블 없음 - API 라우트는 뼈대만 존재
-- Cloudflare Turnstile 미연동: 모든 폼이 `"dev-bypass"` 토큰 하드코딩 중
+- Notion CMS 연동: 브랜드/캡슐 페이지가 아직 하드코딩된 배열 데이터 사용 중 (Notion 조회 함수는 구현됨, 페이지 연동은 Phase 2에서 진행)
+- 리뷰/게시글/댓글 CRUD: API 라우트와 Supabase 테이블은 준비되었으나 페이지에서 실데이터 연동 미완료
 - 검색/필터 UI 연동 미완료: `CapsuleSearch`, `IntensityFilter` 컴포넌트는 존재하지만 브랜드별 캡슐 목록 페이지에 미적용
 - `view_count` 증가 로직 없음: 게시글 상세 조회 시 조회수 카운팅 없음
+- snake_case ↔ camelCase 매핑 유틸리티 미구현
 
 ---
 
@@ -62,7 +66,7 @@
 
 ## 마일스톤 (Milestones)
 
-### Phase 0: 프로젝트 골격 (환경 설정)
+### Phase 0: 프로젝트 골격 (환경 설정) -- ✅ 완료
 
 **기간**: 0.5일
 **목표**: 외부 서비스 계정 및 환경 변수 준비, 로컬 개발 환경에서 모든 서비스 접근 가능 확인
@@ -73,22 +77,22 @@
 
 #### Tasks
 
-- [ ] **[TASK-P0-01]** Notion Integration 생성 및 브랜드/캡슐 DB에 연동 권한 부여
+- [x] **[TASK-P0-01]** Notion Integration 생성 및 브랜드/캡슐 DB에 연동 권한 부여
   - 위치: Notion 웹 설정 (외부 작업)
   - 예상 시간: 30m
   - 완료 기준: Notion API 키 발급 완료, 브랜드 DB와 캡슐 DB에 Integration 연결됨
 
-- [ ] **[TASK-P0-02]** Supabase 프로젝트 생성 및 API 키 확보
+- [x] **[TASK-P0-02]** Supabase 프로젝트 생성 및 API 키 확보
   - 위치: Supabase 대시보드 (외부 작업)
   - 예상 시간: 20m
   - 완료 기준: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` 확보
 
-- [ ] **[TASK-P0-03]** Cloudflare Turnstile 사이트 등록 및 키 발급
+- [x] **[TASK-P0-03]** Cloudflare Turnstile 사이트 등록 및 키 발급
   - 위치: Cloudflare 대시보드 (외부 작업)
   - 예상 시간: 20m
   - 완료 기준: `NEXT_PUBLIC_TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY` 발급 완료
 
-- [ ] **[TASK-P0-04]** `.env.local` 파일 생성 및 모든 환경 변수 설정
+- [x] **[TASK-P0-04]** `.env.local` 파일 생성 및 모든 환경 변수 설정
   - 파일: `frontend/.env.local` (`.env.local.example` 참고)
   - 예상 시간: 20m
   - 의존성: TASK-P0-01, TASK-P0-02, TASK-P0-03
@@ -112,7 +116,7 @@
 
 ---
 
-### Phase 1: 공통 모듈 구성
+### Phase 1: 공통 모듈 구성 -- ✅ 완료
 
 **기간**: 1.5일
 **목표**: Phase 2~3에서 반복 사용되는 공통 코드를 먼저 구현 — Supabase 테이블, Notion 조회 함수, Turnstile 위젯, 매핑 유틸리티
@@ -123,7 +127,7 @@
 
 #### 1-A: 데이터 인프라 (Supabase)
 
-- [ ] **[TASK-P1-01]** `reviews` 테이블 생성 SQL 작성 및 실행
+- [x] **[TASK-P1-01]** `reviews` 테이블 생성 SQL 작성 및 실행
   - 위치: Supabase SQL 에디터 (외부 작업)
   - 예상 시간: 30m
   - 의존성: TASK-P0-02
@@ -141,7 +145,7 @@
     ```
   - 완료 기준: 테이블 생성 완료, `capsule_slug` 컬럼에 INDEX 생성
 
-- [ ] **[TASK-P1-02]** `posts` 테이블 생성 SQL 작성 및 실행
+- [x] **[TASK-P1-02]** `posts` 테이블 생성 SQL 작성 및 실행
   - 위치: Supabase SQL 에디터 (외부 작업)
   - 예상 시간: 30m
   - 의존성: TASK-P0-02
@@ -161,7 +165,7 @@
     ```
   - 완료 기준: 테이블 생성 완료, `category` 컬럼에 INDEX 생성
 
-- [ ] **[TASK-P1-03]** `comments` 테이블 생성 SQL 작성 및 실행
+- [x] **[TASK-P1-03]** `comments` 테이블 생성 SQL 작성 및 실행
   - 위치: Supabase SQL 에디터 (외부 작업)
   - 예상 시간: 30m
   - 의존성: TASK-P1-02 (posts 테이블 선행 필요)
@@ -177,7 +181,7 @@
     ```
   - 완료 기준: 테이블 생성 완료, `post_id` 외래키 INDEX 생성
 
-- [ ] **[TASK-P1-04]** `comment_count` 자동 갱신 DB 트리거 생성
+- [x] **[TASK-P1-04]** `comment_count` 자동 갱신 DB 트리거 생성
   - 위치: Supabase SQL 에디터 (외부 작업)
   - 예상 시간: 30m
   - 의존성: TASK-P1-02, TASK-P1-03
@@ -202,7 +206,7 @@
     FOR EACH ROW EXECUTE FUNCTION update_comment_count();
     ```
 
-- [ ] **[TASK-P1-05]** Row Level Security (RLS) 정책 설정
+- [x] **[TASK-P1-05]** Row Level Security (RLS) 정책 설정
   - 위치: Supabase SQL 에디터 (외부 작업)
   - 예상 시간: 30m
   - 의존성: TASK-P1-01, TASK-P1-02, TASK-P1-03
@@ -211,7 +215,7 @@
 
 #### 1-B: 데이터 접근 함수 (Notion)
 
-- [ ] **[TASK-P1-06]** Notion 브랜드 DB 프로퍼티 구조 확인 및 `getBrands()` 함수 구현
+- [x] **[TASK-P1-06]** Notion 브랜드 DB 프로퍼티 구조 확인 및 `getBrands()` 함수 구현
   - 파일: `frontend/lib/notion.ts`
   - 예상 시간: 2h
   - 의존성: TASK-P0-04 (환경 변수 설정)
@@ -221,7 +225,7 @@
     - ISR 적용: `next: { revalidate: 3600 }` 옵션 사용
   - 완료 기준: 함수 호출 시 Notion DB의 실제 브랜드 데이터가 `Brand[]` 형태로 반환됨
 
-- [ ] **[TASK-P1-07]** Notion 캡슐 DB 프로퍼티 구조 확인 및 `getCapsulesByBrandId()` 함수 구현
+- [x] **[TASK-P1-07]** Notion 캡슐 DB 프로퍼티 구조 확인 및 `getCapsulesByBrandId()` 함수 구현
   - 파일: `frontend/lib/notion.ts`
   - 예상 시간: 2h
   - 의존성: TASK-P1-06
@@ -231,7 +235,7 @@
     - `mapNotionPageToCapsule()` 매핑 함수 구현 (강도, flavor_notes 등 필드 포함)
   - 완료 기준: brandId 기준 캡슐 목록 조회 및 slug 기준 단건 조회 정상 작동
 
-- [ ] **[TASK-P1-08]** `getBrandBySlug()` 함수 구현
+- [x] **[TASK-P1-08]** `getBrandBySlug()` 함수 구현
   - 파일: `frontend/lib/notion.ts`
   - 예상 시간: 1h
   - 의존성: TASK-P1-06
@@ -239,7 +243,7 @@
 
 #### 1-C: 공통 UI 컴포넌트
 
-- [ ] **[TASK-P1-09]** Turnstile React 위젯 컴포넌트 구현
+- [x] **[TASK-P1-09]** Turnstile React 위젯 컴포넌트 구현
   - 파일: `frontend/components/ui/turnstile-widget.tsx` (신규 파일)
   - 예상 시간: 1.5h
   - 의존성: TASK-P0-03 (Turnstile 키 발급)
@@ -273,7 +277,7 @@
 
 ---
 
-### Phase 2: 핵심 기능 — CMS 페이지 연동
+### Phase 2: 핵심 기능 — CMS 페이지 연동 -- **📍 다음 단계**
 
 **기간**: 1일
 **목표**: Phase 1에서 구현한 Notion 조회 함수를 사용하여 브랜드/캡슐 페이지의 placeholder 데이터를 실데이터로 교체
@@ -344,7 +348,7 @@
   - 작업 내용: 이미 구현된 API 라우트가 실제 테이블과 연동되는지 검증 (Supabase 테이블 컬럼명과 INSERT 필드명 일치 확인)
   - 완료 기준: `POST /api/reviews` 요청 시 Supabase `reviews` 테이블에 실제 행 생성
 
-- [ ] **[TASK-P3-03]** `ReviewForm` 컴포넌트에 Turnstile 위젯 연동
+- [x] **[TASK-P3-03]** `ReviewForm` 컴포넌트에 Turnstile 위젯 연동
   - 파일: `frontend/components/review/review-form.tsx`
   - 예상 시간: 1h
   - 의존성: TASK-P1-09, TASK-P3-02
@@ -367,7 +371,7 @@
   - 작업 내용: `POST /api/posts` 요청 시 실제 테이블에 INSERT 되는지 검증
   - 완료 기준: 게시글 작성 후 커뮤니티 목록에서 새 게시글 확인 가능
 
-- [ ] **[TASK-P3-06]** `PostForm` 컴포넌트에 Turnstile 위젯 연동
+- [x] **[TASK-P3-06]** `PostForm` 컴포넌트에 Turnstile 위젯 연동
   - 파일: `frontend/components/community/post-form.tsx`
   - 예상 시간: 1h
   - 의존성: TASK-P1-09, TASK-P3-05
@@ -391,7 +395,7 @@
   - 의존성: TASK-P1-03
   - 완료 기준: 댓글 작성 후 Supabase `comments` 테이블에 행 생성, `posts.comment_count` 자동 갱신 확인
 
-- [ ] **[TASK-P3-09]** `CommentForm` 컴포넌트에 Turnstile 위젯 연동
+- [x] **[TASK-P3-09]** `CommentForm` 컴포넌트에 Turnstile 위젯 연동
   - 파일: `frontend/components/community/comment-form.tsx`
   - 예상 시간: 1h
   - 의존성: TASK-P1-09, TASK-P3-08
@@ -516,7 +520,7 @@
 | 항목                                                         | 심각도 | 설명                                                                                                |
 | ------------------------------------------------------------ | ------ | --------------------------------------------------------------------------------------------------- |
 | `GET /api/posts/[postId]` 라우트 미존재                      | 높음   | 게시글 상세 페이지 서버 연동 시 단건 조회 방식 결정 필요                                            |
-| Turnstile 클라이언트 라이브러리 미설치                       | 높음   | `package.json`에 Turnstile React 패키지 없음, Phase 1 (TASK-P1-09) 전 설치 필요                     |
+| ~~Turnstile 클라이언트 라이브러리 미설치~~                   | ~~높음~~ | ~~해결 완료 — `@marsidev/react-turnstile` 설치 및 TurnstileWidget 컴포넌트 구현 완료 (Task 4)~~     |
 | camelCase ↔ snake_case 매핑 없음                             | 중간   | 해결 예정 (Phase 1 TASK-P1-10) — Supabase 응답을 TypeScript 타입으로 변환하는 명시적 매핑 함수 필요 |
 | `view_count` 증가 로직 없음                                  | 중간   | 현재 게시글 상세 조회 시 조회수 미증가                                                              |
 | 커뮤니티 카테고리 필터링이 클라이언트 사이드                 | 낮음   | 데이터가 많아지면 성능 문제 가능, URL searchParams 방식 전환 권장                                   |
@@ -529,15 +533,15 @@
 
 | 변수명                           | 용도                         | 환경                   | 현재 상태                     |
 | -------------------------------- | ---------------------------- | ---------------------- | ----------------------------- |
-| `NOTION_API_KEY`                 | Notion API 인증              | 서버 전용              | 미설정                        |
-| `NOTION_BRAND_DATABASE_ID`       | Notion 브랜드 DB ID          | 서버 전용              | 미설정                        |
-| `NOTION_CAPSULE_DATABASE_ID`     | Notion 캡슐 DB ID            | 서버 전용              | 미설정                        |
-| `NEXT_PUBLIC_SUPABASE_URL`       | Supabase 프로젝트 URL        | 공개 (클라이언트 포함) | 미설정                        |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY`  | Supabase 익명 키 (읽기)      | 공개 (클라이언트 포함) | 미설정                        |
-| `SUPABASE_SERVICE_ROLE_KEY`      | Supabase 서비스 롤 키 (쓰기) | 서버 전용              | 미설정                        |
-| `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | Turnstile 사이트 키 (위젯)   | 공개 (클라이언트 포함) | 미설정                        |
-| `TURNSTILE_SECRET_KEY`           | Turnstile 서버 검증 키       | 서버 전용              | 미설정                        |
-| `NEXT_PUBLIC_BASE_URL`           | API fetch 기본 URL           | 공개                   | 로컬: `http://localhost:3000` |
+| `NOTION_API_KEY`                 | Notion API 인증              | 서버 전용              | ✅ 설정 완료                  |
+| `NOTION_BRAND_DATABASE_ID`       | Notion 브랜드 DB ID          | 서버 전용              | ✅ 설정 완료                  |
+| `NOTION_CAPSULE_DATABASE_ID`     | Notion 캡슐 DB ID            | 서버 전용              | ✅ 설정 완료                  |
+| `NEXT_PUBLIC_SUPABASE_URL`       | Supabase 프로젝트 URL        | 공개 (클라이언트 포함) | ✅ 설정 완료                  |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY`  | Supabase 익명 키 (읽기)      | 공개 (클라이언트 포함) | ✅ 설정 완료                  |
+| `SUPABASE_SERVICE_ROLE_KEY`      | Supabase 서비스 롤 키 (쓰기) | 서버 전용              | ✅ 설정 완료                  |
+| `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | Turnstile 사이트 키 (위젯)   | 공개 (클라이언트 포함) | ✅ 설정 완료                  |
+| `TURNSTILE_SECRET_KEY`           | Turnstile 서버 검증 키       | 서버 전용              | ✅ 설정 완료                  |
+| `NEXT_PUBLIC_BASE_URL`           | API fetch 기본 URL           | 공개                   | ✅ 로컬: `http://localhost:3000` |
 
 > `SUPABASE_SERVICE_ROLE_KEY`는 절대 클라이언트 번들에 포함되면 안 됩니다. `NEXT_PUBLIC_` 접두사 없이 선언되어 있어 현재 올바르게 설정되어 있습니다.
 
@@ -547,31 +551,31 @@
 
 ### Notion
 
-- [ ] Notion 계정에서 Integration 생성 (`Settings > Connections > Develop or manage integrations`)
-- [ ] 브랜드 DB 페이지에 Integration 연결 (`Share > Invite`)
-- [ ] 캡슐 DB 페이지에 Integration 연결 (`Share > Invite`)
-- [ ] 브랜드 DB ID 확인 (DB 페이지 URL에서 추출)
-- [ ] 캡슐 DB ID 확인 (DB 페이지 URL에서 추출)
-- [ ] 브랜드 DB 프로퍼티명 목록 확인: `name`, `slug`, `description`, `logo_url`, `website_url`, `country`
-- [ ] 캡슐 DB 프로퍼티명 목록 확인: `name`, `slug`, `brand_id`, `intensity`, `flavor_notes`, `image_url`, `is_limited`
+- [x] Notion 계정에서 Integration 생성 (`Settings > Connections > Develop or manage integrations`)
+- [x] 브랜드 DB 페이지에 Integration 연결 (`Share > Invite`)
+- [x] 캡슐 DB 페이지에 Integration 연결 (`Share > Invite`)
+- [x] 브랜드 DB ID 확인 (DB 페이지 URL에서 추출)
+- [x] 캡슐 DB ID 확인 (DB 페이지 URL에서 추출)
+- [x] 브랜드 DB 프로퍼티명 목록 확인: `name`, `slug`, `description`, `logo_url`, `website_url`, `country`
+- [x] 캡슐 DB 프로퍼티명 목록 확인: `name`, `slug`, `brand_id`, `intensity`, `flavor_notes`, `image_url`, `is_limited`
 
 ### Supabase
 
-- [ ] 프로젝트 생성 (리전: ap-northeast-2 Seoul 권장)
-- [ ] `reviews` 테이블 생성 완료
-- [ ] `posts` 테이블 생성 완료
-- [ ] `comments` 테이블 생성 완료
-- [ ] `comment_count` 자동 갱신 트리거 생성 완료
-- [ ] RLS 정책 설정 완료 (anon 읽기 허용, 쓰기는 service_role만)
-- [ ] API URL 및 anon key, service role key 확보
+- [x] 프로젝트 생성 (리전: ap-northeast-2 Seoul 권장)
+- [x] `reviews` 테이블 생성 완료
+- [x] `posts` 테이블 생성 완료
+- [x] `comments` 테이블 생성 완료
+- [x] `comment_count` 자동 갱신 트리거 생성 완료
+- [x] RLS 정책 설정 완료 (anon 읽기 허용, 쓰기는 service_role만)
+- [x] API URL 및 anon key, service role key 확보
 
 ### Cloudflare Turnstile
 
-- [ ] Cloudflare 계정 생성 (무료 가능)
-- [ ] Turnstile 사이트 등록 (`turnstile.cloudflare.com`)
-- [ ] 허용 도메인 등록: `localhost`, Vercel 배포 도메인
-- [ ] Site Key (`NEXT_PUBLIC_TURNSTILE_SITE_KEY`) 확보
-- [ ] Secret Key (`TURNSTILE_SECRET_KEY`) 확보
+- [x] Cloudflare 계정 생성 (무료 가능)
+- [x] Turnstile 사이트 등록 (`turnstile.cloudflare.com`)
+- [x] 허용 도메인 등록: `localhost`, Vercel 배포 도메인
+- [x] Site Key (`NEXT_PUBLIC_TURNSTILE_SITE_KEY`) 확보
+- [x] Secret Key (`TURNSTILE_SECRET_KEY`) 확보
 
 ### Vercel
 
@@ -607,5 +611,6 @@
 
 | 날짜       | 버전  | 변경 내용                                                                                                                                                                                                             | 작성자               |
 | ---------- | ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
+| 2026-03-14 | 1.2.0 | 진행 상황 반영 — Phase 0, Phase 1 완료 표시, Turnstile 폼 연동(P3-03/06/09) 완료, 환경 변수/외부 서비스 체크리스트 업데이트, 현재 상태 섹션 갱신 | claude               |
 | 2026-03-13 | 1.1.0 | Phase 구조 재편 — 공통 모듈 Phase 신설(기존 7→6 Phase), Phase 간 순서 근거 추가, Turnstile 위젯을 Phase 1로 이동, CRUD+스팸 방지 통합(Phase 3), SEO를 Phase 4로 이동, 태스크 번호 재편성, snake_case 매핑 태스크 신설 | claude               |
 | 2026-03-12 | 1.0.0 | 초기 로드맵 생성 - MVP PRD 기반 6개 Phase 정의                                                                                                                                                                        | prd-to-roadmap agent |
