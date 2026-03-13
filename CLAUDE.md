@@ -2,6 +2,19 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## 사용 언어 설정
+
+- 기본 응답 언어: 한국어(존댓말 사용)
+- 코드 주석: 한국어
+- 커밋 메시지: 한국어로 작성
+- 문서화: 한국어로 작성 (IMPORTANT)
+- 변수명/함수명: 영어, camelCase (코드 표준 준수)
+
+## 개발 문서 참고
+
+- PRD 문서 파일 위치: ai_docs/PRD.md
+- 개발 로드맵 파일 위치: ai_docs/ROADMAP.md
+
 ---
 
 ## 프로젝트 개요
