@@ -15,6 +15,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - PRD 문서 파일 위치: ai_docs/PRD.md
 - 개발 로드맵 파일 위치: ai_docs/ROADMAP.md
 
+## TaskMasterAi
+
+- taskmasterai를 사용 중이라면 task의 현재 상태를 항상 최신화
+
 ---
 
 ## 프로젝트 개요

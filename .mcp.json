@@ -3,7 +3,12 @@
     "context7": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "@upstash/context7-mcp", "--api-key", "ctx7sk-6e93706e-2c8a-4391-811d-14f47b98edb7"],
+      "args": [
+        "-y",
+        "@upstash/context7-mcp",
+        "--api-key",
+        "ctx7sk-6e93706e-2c8a-4391-811d-14f47b98edb7"
+      ],
       "env": {}
     },
     "playwright": {
@@ -28,6 +33,12 @@
       "type": "stdio",
       "command": "npx",
       "args": ["-y", "@modelcontextprotocol/server-memory"],
+      "env": {}
+    },
+    "taskmaster-ai": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "--package=task-master-ai", "task-master-ai"],
       "env": {}
     }
   }
