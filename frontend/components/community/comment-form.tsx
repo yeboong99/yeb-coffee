@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -25,6 +26,7 @@ interface CommentFormProps {
 }
 
 export function CommentForm({ postId, onSuccess }: CommentFormProps) {
+  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   // Cloudflare Turnstile 인증 토큰 상태
   const [turnstileToken, setTurnstileToken] = useState<string>("");
@@ -56,6 +58,8 @@ export function CommentForm({ postId, onSuccess }: CommentFormProps) {
       toast.success("댓글이 등록되었습니다.");
       reset();
       setTurnstileToken("");
+      // 서버 컴포넌트(CommentList) 데이터 재조회를 위해 페이지 갱신
+      router.refresh();
       onSuccess?.();
     } catch {
       toast.error("댓글 등록에 실패했습니다. 다시 시도해주세요.");

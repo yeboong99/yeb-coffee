@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -28,6 +29,7 @@ interface ReviewFormProps {
 }
 
 export function ReviewForm({ capsuleId, capsuleSlug, onSuccess }: ReviewFormProps) {
+  const router = useRouter();
   const [rating, setRating] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   // Cloudflare Turnstile 인증 토큰 상태
@@ -65,6 +67,8 @@ export function ReviewForm({ capsuleId, capsuleSlug, onSuccess }: ReviewFormProp
       reset();
       setRating(0);
       setTurnstileToken("");
+      // 서버 컴포넌트(ReviewList) 데이터 재조회를 위해 페이지 갱신
+      router.refresh();
       onSuccess?.();
     } catch {
       toast.error("리뷰 등록에 실패했습니다. 다시 시도해주세요.");

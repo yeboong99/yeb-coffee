@@ -16,3 +16,9 @@ export interface CreateReviewInput {
   content: string;
   turnstileToken: string;
 }
+
+// 커뮤니티 서비스 자체 평점 (Supabase 집계)
+export interface ServiceRating {
+  avgRating: number | null;
+  reviewCount: number;
+}

@@ -1,61 +1,74 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PostList } from "@/components/community/post-list";
+import { CategoryTabs } from "@/components/community/category-tabs";
 import { PenSquare } from "lucide-react";
+import { createServerSupabaseClient } from "@/lib/supabase";
 import type { Post, PostCategory } from "@/types";
 
-// TODO: Supabase에서 실제 데이터 가져오기
-const placeholderPosts: Post[] = [
-  {
-    id: "1",
-    title: "네스프레소 버츄오 넥스트 추천 캡슐 TOP 5",
-    content: "오늘은 버츄오 넥스트와 잘 어울리는 캡슐 5가지를 소개합니다...",
-    category: "추천",
-    authorNickname: "커피러버",
-    viewCount: 320,
-    commentCount: 12,
-    createdAt: "2026-03-10T10:00:00Z",
-    updatedAt: "2026-03-10T10:00:00Z",
-  },
-  {
-    id: "2",
-    title: "돌체구스토 캡슐 보관 방법 공유합니다",
-    content: "캡슐을 오래 신선하게 보관하는 방법에 대해 알아봤습니다...",
-    category: "정보공유",
-    authorNickname: "에스프레소마스터",
-    viewCount: 185,
-    commentCount: 7,
-    createdAt: "2026-03-09T14:00:00Z",
-    updatedAt: "2026-03-09T14:00:00Z",
-  },
-  {
-    id: "3",
-    title: "오리지널 vs 버츄오 어떤 머신이 더 좋나요?",
-    content: "처음 구매를 고려 중인데 두 머신의 차이가 궁금합니다...",
-    category: "질문",
-    authorNickname: "커피초보",
-    viewCount: 410,
-    commentCount: 28,
-    createdAt: "2026-03-08T09:00:00Z",
-    updatedAt: "2026-03-08T09:00:00Z",
-  },
-  {
-    id: "4",
-    title: "오늘 새로 나온 한정판 캡슐 사봤어요",
-    content: "오늘 동네 매장에 들렀다가 한정판 캡슐을 발견해서 바로 구매했습니다...",
-    category: "잡담",
-    authorNickname: "네스프레소팬",
-    viewCount: 95,
-    commentCount: 4,
-    createdAt: "2026-03-07T18:00:00Z",
-    updatedAt: "2026-03-07T18:00:00Z",
-  },
-];
+// ISR: 60초마다 재검증
+export const revalidate = 60;
 
-const CATEGORIES: (PostCategory | "전체")[] = ["전체", "정보공유", "추천", "질문", "잡담"];
+// Supabase posts 테이블 레코드 타입 (snake_case)
+interface PostRow {
+  id: string;
+  title: string;
+  content: string;
+  category: string;
+  author_nickname: string;
+  view_count: number;
+  comment_count: number;
+  created_at: string;
+  updated_at: string;
+}
 
-export default function CommunityPage() {
+// snake_case DB 레코드를 camelCase 타입으로 변환
+function mapRowToPost(row: PostRow): Post {
+  return {
+    id: row.id,
+    title: row.title,
+    content: row.content,
+    category: row.category as PostCategory,
+    authorNickname: row.author_nickname,
+    viewCount: row.view_count,
+    commentCount: row.comment_count,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  };
+}
+
+interface Props {
+  searchParams: Promise<{ category?: string }>;
+}
+
+export default async function CommunityPage({ searchParams }: Props) {
+  const { category } = await searchParams;
+
+  const supabase = createServerSupabaseClient();
+
+  // 카테고리 필터 적용하여 게시글 조회
+  const query = supabase
+    .from("posts")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  // 카테고리가 지정된 경우 필터 적용
+  const { data, error } = category
+    ? await query.eq("category", category)
+    : await query;
+
+  if (error) {
+    return (
+      <div className="mx-auto max-w-4xl px-4 py-10">
+        <div className="text-center py-16 text-destructive">
+          게시글을 불러오는 중 오류가 발생했습니다.
+        </div>
+      </div>
+    );
+  }
+
+  const posts: Post[] = (data as PostRow[]).map(mapRowToPost);
+
   return (
     <div className="mx-auto max-w-4xl px-4 py-10">
       <div className="flex items-center justify-between mb-8">
@@ -71,21 +84,11 @@ export default function CommunityPage() {
         </Button>
       </div>
 
-      <Tabs defaultValue="전체">
-        <TabsList className="mb-6">
-          {CATEGORIES.map((cat) => (
-            <TabsTrigger key={cat} value={cat}>{cat}</TabsTrigger>
-          ))}
-        </TabsList>
-        <TabsContent value="전체">
-          <PostList posts={placeholderPosts} />
-        </TabsContent>
-        {(["정보공유", "추천", "질문", "잡담"] as PostCategory[]).map((cat) => (
-          <TabsContent key={cat} value={cat}>
-            <PostList posts={placeholderPosts.filter((p) => p.category === cat)} />
-          </TabsContent>
-        ))}
-      </Tabs>
+      {/* 카테고리 탭 - 클라이언트 컴포넌트 (URL searchParams 기반 탭 전환) */}
+      <CategoryTabs />
+
+      {/* 서버에서 필터링된 게시글 목록 */}
+      <PostList posts={posts} />
     </div>
   );
 }

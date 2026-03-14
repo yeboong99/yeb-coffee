@@ -45,7 +45,7 @@ function getNumber(property: ReturnType<typeof getProperty>): number | null {
 /** url 프로퍼티 → string | null */
 function getUrl(property: ReturnType<typeof getProperty>): string | null {
   if (!property || property.type !== 'url') return null;
-  return property.url;
+  return property.url || null; // 빈 문자열도 null로 처리
 }
 
 /** relation 프로퍼티 → id 배열 */
@@ -82,6 +82,15 @@ function getCheckbox(property: ReturnType<typeof getProperty>): boolean {
   return property.checkbox;
 }
 
+/** rollup 프로퍼티 → number | null (number 타입이면 값, array 타입이면 배열 길이) */
+function getRollupNumber(property: ReturnType<typeof getProperty>): number | null {
+  if (!property || property.type !== 'rollup') return null;
+  const rollup = property.rollup;
+  if (rollup.type === 'number') return rollup.number ?? null;
+  if (rollup.type === 'array') return rollup.array.length;
+  return null;
+}
+
 // ============================================================
 // 매핑 함수 (내부 사용)
 // ============================================================
@@ -93,11 +102,16 @@ function mapNotionPageToBrand(page: PageObjectResponse): Brand {
     id: page.id,
     slug: getPlainText(getProperty(props, 'Slug', 'slug', 'SLUG')),
     name: getPlainText(getProperty(props, 'Name', 'name', '이름')),
-    description: getPlainText(getProperty(props, 'Description', 'description', '설명')),
-    logoUrl: getFiles(getProperty(props, 'Logo', 'logo', 'LogoUrl', 'logo_url')),
-    websiteUrl: getUrl(getProperty(props, 'WebsiteUrl', 'websiteUrl', 'Website', 'website')),
+    description: getPlainText(getProperty(props, 'Descript', 'Description', 'description', '설명')),
+    logoUrl:
+      getUrl(getProperty(props, 'Logo URL', 'LogoUrl', 'logoUrl', 'logo_url'))
+      ?? getFiles(getProperty(props, 'Logo URL', 'Logo', 'logo')),
+    websiteUrl: getUrl(getProperty(props, 'Website URL', 'WebsiteUrl', 'websiteUrl', 'Website', 'website')),
     country: getPlainText(getProperty(props, 'Country', 'country', '국가')),
-    capsuleCount: getNumber(getProperty(props, 'CapsuleCount', 'capsuleCount', 'Capsule Count')) ?? 0,
+    capsuleCount:
+      getRollupNumber(getProperty(props, 'Capsule Count', 'capsuleCount', 'CapsuleCount'))
+      ?? getNumber(getProperty(props, 'Capsule Count', 'capsuleCount', 'CapsuleCount'))
+      ?? 0,
   };
 }
 
@@ -124,12 +138,21 @@ function mapNotionPageToCapsule(
     brandSlug,
     name: getPlainText(getProperty(props, 'Name', 'name', '이름')),
     description: getPlainText(getProperty(props, 'Description', 'description', '설명')),
-    imageUrl: getFiles(getProperty(props, 'Image', 'image', 'ImageUrl', 'image_url')),
+    imageUrl:
+      getFiles(getProperty(props, 'Image URL', 'Image', 'image', 'ImageUrl', 'image_url'))
+      ?? getUrl(getProperty(props, 'Image URL', 'Image', 'image', 'ImageUrl', 'image_url')),
     intensity,
-    flavorNotes: getMultiSelect(getProperty(props, 'FlavorNotes', 'flavorNotes', 'Flavor Notes', 'flavor_notes')),
-    isLimitedEdition: getCheckbox(getProperty(props, 'IsLimitedEdition', 'isLimitedEdition', 'Limited Edition')),
+    // 'Flavor Notes'는 rich_text 타입이므로 쉼표 분리 처리
+    flavorNotes: (() => {
+      const multiSelect = getMultiSelect(getProperty(props, 'Flavor Notes', 'FlavorNotes', 'flavorNotes', 'flavor_notes'));
+      if (multiSelect.length > 0) return multiSelect;
+      const richText = getPlainText(getProperty(props, 'Flavor Notes', 'FlavorNotes', 'flavorNotes', 'flavor_notes'));
+      return richText ? richText.split(',').map((s) => s.trim()).filter(Boolean) : [];
+    })(),
+    isLimitedEdition: getCheckbox(getProperty(props, 'Is Limited', 'IsLimitedEdition', 'isLimitedEdition', 'Limited Edition')),
     isDiscontinued: getCheckbox(getProperty(props, 'IsDiscontinued', 'isDiscontinued', 'Discontinued')),
-    averageRating: getNumber(getProperty(props, 'AverageRating', 'averageRating', 'Average Rating')),
+    // Notion 프로퍼티명 'AverageRating'은 쿠팡 연동 평점을 의미
+    coupangRating: getNumber(getProperty(props, 'AverageRating', 'averageRating', 'Average Rating')),
     reviewCount: getNumber(getProperty(props, 'ReviewCount', 'reviewCount', 'Review Count')) ?? 0,
   };
 }
@@ -156,8 +179,8 @@ async function getBrandById(brandId: string): Promise<Brand | null> {
 /** 전체 브랜드 목록 조회 */
 export async function getBrands(): Promise<Brand[]> {
   try {
-    const response = await notion.dataSources.query({
-      data_source_id: BRAND_DATABASE_ID,
+    const response = await notion.databases.query({
+      database_id: BRAND_DATABASE_ID,
     });
 
     return response.results
@@ -169,22 +192,11 @@ export async function getBrands(): Promise<Brand[]> {
   }
 }
 
-/** slug로 브랜드 단건 조회 */
+/** slug로 브랜드 단건 조회 (전체 목록 조회 후 JS 필터 — Notion Slug 프로퍼티 부재 대응) */
 export async function getBrandBySlug(slug: string): Promise<Brand | null> {
   try {
-    const response = await notion.dataSources.query({
-      data_source_id: BRAND_DATABASE_ID,
-      filter: {
-        or: [
-          { property: 'Slug', rich_text: { equals: slug } },
-          { property: 'slug', rich_text: { equals: slug } },
-        ],
-      },
-    });
-
-    const page = response.results.filter(isFullPage)[0];
-    if (!page) return null;
-    return mapNotionPageToBrand(page);
+    const brands = await getBrands();
+    return brands.find((b) => b.slug === slug) ?? null;
   } catch (error) {
     console.error('[Notion] getBrandBySlug 오류:', error);
     return null;
@@ -199,8 +211,8 @@ export async function getCapsulesByBrandId(brandId: string): Promise<Capsule[]> 
     const brandName = brand?.name ?? '';
     const brandSlug = brand?.slug ?? '';
 
-    const response = await notion.dataSources.query({
-      data_source_id: CAPSULE_DATABASE_ID,
+    const response = await notion.databases.query({
+      database_id: CAPSULE_DATABASE_ID,
       filter: {
         property: 'Brand',
         relation: { contains: brandId },
@@ -216,30 +228,24 @@ export async function getCapsulesByBrandId(brandId: string): Promise<Capsule[]> 
   }
 }
 
-/** slug로 캡슐 단건 조회 */
+/** slug로 캡슐 단건 조회 (전체 목록 순회 — Notion Slug 프로퍼티 부재 대응) */
 export async function getCapsuleBySlug(slug: string): Promise<Capsule | null> {
   try {
-    const response = await notion.dataSources.query({
-      data_source_id: CAPSULE_DATABASE_ID,
-      filter: {
-        or: [
-          { property: 'Slug', rich_text: { equals: slug } },
-          { property: 'slug', rich_text: { equals: slug } },
-        ],
-      },
+    const response = await notion.databases.query({
+      database_id: CAPSULE_DATABASE_ID,
     });
+    const pages = response.results.filter(isFullPage);
 
-    const page = response.results.filter(isFullPage)[0];
-    if (!page) return null;
-
-    // relation에서 brandId 추출 후 브랜드 정보 1회 조회
-    const brandIds = getRelation(
-      getProperty(page.properties, 'Brand', 'brand', 'BrandId', 'brandId'),
-    );
-    const brandId = brandIds[0] ?? '';
-    const brand = brandId ? await getBrandById(brandId) : null;
-
-    return mapNotionPageToCapsule(page, brand?.name ?? '', brand?.slug ?? '');
+    for (const page of pages) {
+      const brandIds = getRelation(
+        getProperty(page.properties, 'Brand', 'brand', 'BrandId', 'brandId'),
+      );
+      const brandId = brandIds[0] ?? '';
+      const brand = brandId ? await getBrandById(brandId) : null;
+      const capsule = mapNotionPageToCapsule(page, brand?.name ?? '', brand?.slug ?? '');
+      if (capsule.slug === slug) return capsule;
+    }
+    return null;
   } catch (error) {
     console.error('[Notion] getCapsuleBySlug 오류:', error);
     return null;

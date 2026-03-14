@@ -6,49 +6,39 @@ import { Separator } from "@/components/ui/separator";
 import { CommentList } from "@/components/community/comment-list";
 import { CommentForm } from "@/components/community/comment-form";
 import { ChevronLeft, Eye, MessageSquare } from "lucide-react";
-import type { Post, Comment } from "@/types";
+import { createServerSupabaseClient } from "@/lib/supabase";
+import type { Post } from "@/types";
 
-// TODO: Supabase에서 실제 데이터 가져오기
-const placeholderPosts: Record<string, Post> = {
-  "1": {
-    id: "1",
-    title: "네스프레소 버츄오 넥스트 추천 캡슐 TOP 5",
-    content: `오늘은 버츄오 넥스트와 잘 어울리는 캡슐 5가지를 소개합니다.
+// 조회수가 매 요청마다 증가해야 하므로 동적 렌더링 사용
+export const revalidate = 0;
 
-1. **멜로지오** - 가장 무난하고 부드러운 커피. 처음 시작하기에 딱 좋습니다.
-2. **스토르미오** - 강렬하고 진한 맛. 아침에 마시면 기운이 납니다.
-3. **아르페지오** - 코코아 향이 나는 부드러운 에스프레소.
-4. **탈리지오** - 견과류 향이 가득한 롱고.
-5. **카프리치오** - 과일향과 산미가 특징인 가벼운 커피.
+// Supabase posts 테이블 레코드 타입 (snake_case)
+interface PostRow {
+  id: string;
+  title: string;
+  content: string;
+  category: string;
+  author_nickname: string;
+  view_count: number;
+  comment_count: number;
+  created_at: string;
+  updated_at: string;
+}
 
-각 캡슐마다 강도와 향미가 달라서 취향에 맞게 골라보시길 추천드려요!`,
-    category: "추천",
-    authorNickname: "커피러버",
-    viewCount: 320,
-    commentCount: 2,
-    createdAt: "2026-03-10T10:00:00Z",
-    updatedAt: "2026-03-10T10:00:00Z",
-  },
-};
-
-const placeholderComments: Record<string, Comment[]> = {
-  "1": [
-    {
-      id: "cm1",
-      postId: "1",
-      authorNickname: "버츄오팬",
-      content: "멜로지오 정말 맛있죠! 저도 추천합니다.",
-      createdAt: "2026-03-10T11:00:00Z",
-    },
-    {
-      id: "cm2",
-      postId: "1",
-      authorNickname: "커피입문자",
-      content: "좋은 정보 감사합니다. 처음엔 멜로지오로 시작해봐야겠어요!",
-      createdAt: "2026-03-10T13:00:00Z",
-    },
-  ],
-};
+// snake_case DB 레코드를 camelCase 타입으로 변환
+function mapRowToPost(row: PostRow): Post {
+  return {
+    id: row.id,
+    title: row.title,
+    content: row.content,
+    category: row.category as Post["category"],
+    authorNickname: row.author_nickname,
+    viewCount: row.view_count,
+    commentCount: row.comment_count,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  };
+}
 
 interface Props {
   params: Promise<{ postId: string }>;
@@ -56,13 +46,28 @@ interface Props {
 
 export default async function PostPage({ params }: Props) {
   const { postId } = await params;
-  const post = placeholderPosts[postId];
 
-  if (!post) {
+  const supabase = createServerSupabaseClient();
+
+  // 단일 게시글 조회
+  const { data, error } = await supabase
+    .from("posts")
+    .select("*")
+    .eq("id", postId)
+    .single();
+
+  // 게시글이 없거나 오류 시 404 처리
+  if (error || !data) {
     notFound();
   }
 
-  const comments = placeholderComments[postId] ?? [];
+  const post = mapRowToPost(data as PostRow);
+
+  // 조회수 증가 (에러 무시 - 조회수 증가 실패가 페이지 렌더링을 막아선 안 됨)
+  await supabase
+    .from("posts")
+    .update({ view_count: post.viewCount + 1 })
+    .eq("id", postId);
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-10">
@@ -82,7 +87,7 @@ export default async function PostPage({ params }: Props) {
             <time>{new Date(post.createdAt).toLocaleDateString("ko-KR")}</time>
             <span className="flex items-center gap-1">
               <Eye className="h-3.5 w-3.5" />
-              {post.viewCount}
+              {post.viewCount + 1}
             </span>
             <span className="flex items-center gap-1">
               <MessageSquare className="h-3.5 w-3.5" />
@@ -101,8 +106,9 @@ export default async function PostPage({ params }: Props) {
       <Separator className="my-8" />
 
       <section>
-        <h2 className="text-lg font-bold mb-4">댓글 ({comments.length})</h2>
-        <CommentList comments={comments} />
+        <h2 className="text-lg font-bold mb-4">댓글 ({post.commentCount})</h2>
+        {/* CommentList가 내부에서 Supabase 조회 - postId만 전달 */}
+        <CommentList postId={postId} />
       </section>
 
       <Separator className="my-8" />

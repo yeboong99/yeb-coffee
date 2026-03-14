@@ -14,6 +14,6 @@ export interface Capsule {
   flavorNotes: FlavorNote[];
   isLimitedEdition: boolean;
   isDiscontinued: boolean;
-  averageRating: number | null;
+  coupangRating: number | null;
   reviewCount: number;
 }

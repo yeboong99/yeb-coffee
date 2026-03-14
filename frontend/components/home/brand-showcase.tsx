@@ -1,14 +1,13 @@
 import Link from "next/link";
-import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { BrandCard } from "@/components/brand/brand-card";
+import type { Brand } from "@/types";
 
-const placeholderBrands = [
-  { name: "네스프레소", description: "오리지널 & 버츄오 캡슐", slug: "nespresso", capsuleCount: 40 },
-  { name: "돌체구스토", description: "다양한 음료 캡슐", slug: "dolce-gusto", capsuleCount: 35 },
-  { name: "버츄오", description: "버츄오 전용 캡슐", slug: "vertuo", capsuleCount: 20 },
-];
+interface BrandShowcaseProps {
+  brands: Brand[];
+}
 
-export function BrandShowcase() {
+export function BrandShowcase({ brands }: BrandShowcaseProps) {
   return (
     <section className="py-12">
       <div className="flex items-center justify-between mb-6">
@@ -17,23 +16,18 @@ export function BrandShowcase() {
           <Link href="/brands">전체 보기</Link>
         </Button>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        {placeholderBrands.map((brand) => (
-          <Link key={brand.slug} href={`/brands/${brand.slug}`}>
-            <Card className="hover:border-primary/50 transition-colors cursor-pointer h-full">
-              <CardHeader>
-                <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center mb-2 text-lg">
-                  ☕
-                </div>
-                <CardTitle className="text-lg">{brand.name}</CardTitle>
-                <CardDescription>
-                  {brand.description} · {brand.capsuleCount}종
-                </CardDescription>
-              </CardHeader>
-            </Card>
-          </Link>
-        ))}
-      </div>
+      {brands.length === 0 ? (
+        <p className="text-muted-foreground text-center py-8">
+          등록된 브랜드가 없습니다.
+        </p>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {/* BrandCard 내부에 Link 포함 - 중복 Link 래퍼 없음 */}
+          {brands.map((brand) => (
+            <BrandCard key={brand.slug} brand={brand} />
+          ))}
+        </div>
+      )}
     </section>
   );
 }
