@@ -78,11 +78,12 @@
         "dependencies": [
           "3"
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [],
         "complexity": 5,
         "recommendedSubtasks": 4,
-        "expansionPrompt": "홈 페이지 브랜드 쇼케이스 Notion 연동, 브랜드 목록 페이지 실데이터 교체, 브랜드별 캡슐 목록 페이지 실데이터 교체, 캡슐 상세 페이지 실데이터 교체 및 notFound() 처리를 각 서브태스크로 구성하세요."
+        "expansionPrompt": "홈 페이지 브랜드 쇼케이스 Notion 연동, 브랜드 목록 페이지 실데이터 교체, 브랜드별 캡슐 목록 페이지 실데이터 교체, 캡슐 상세 페이지 실데이터 교체 및 notFound() 처리를 각 서브태스크로 구성하세요.",
+        "updatedAt": "2026-03-14T03:01:49.102Z"
       },
       {
         "id": "6",
@@ -96,11 +97,12 @@
           "4",
           "5"
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [],
         "complexity": 5,
         "recommendedSubtasks": 3,
-        "expansionPrompt": "ReviewList를 서버 컴포넌트로 전환하여 Supabase 직접 조회 구현, 캡슐 상세 페이지에 Suspense 경계 추가, ReviewForm 제출 성공 후 router.refresh()를 통한 리스트 자동 갱신 구현을 각 서브태스크로 구성하세요."
+        "expansionPrompt": "ReviewList를 서버 컴포넌트로 전환하여 Supabase 직접 조회 구현, 캡슐 상세 페이지에 Suspense 경계 추가, ReviewForm 제출 성공 후 router.refresh()를 통한 리스트 자동 갱신 구현을 각 서브태스크로 구성하세요.",
+        "updatedAt": "2026-03-14T07:06:41.913Z"
       },
       {
         "id": "7",
@@ -113,11 +115,12 @@
           "2",
           "4"
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [],
         "complexity": 6,
         "recommendedSubtasks": 4,
-        "expansionPrompt": "게시글 목록 페이지 Supabase 연동 및 카테고리 필터링, 게시글 상세 페이지 Supabase 연동 및 조회수 증가 로직, CommentList를 서버 컴포넌트로 전환 및 Supabase 연동, PostForm과 CommentForm의 제출 후 router.refresh() 추가를 각 서브태스크로 구성하세요."
+        "expansionPrompt": "게시글 목록 페이지 Supabase 연동 및 카테고리 필터링, 게시글 상세 페이지 Supabase 연동 및 조회수 증가 로직, CommentList를 서버 컴포넌트로 전환 및 Supabase 연동, PostForm과 CommentForm의 제출 후 router.refresh() 추가를 각 서브태스크로 구성하세요.",
+        "updatedAt": "2026-03-14T07:53:25.191Z"
       },
       {
         "id": "8",
@@ -129,11 +132,12 @@
         "dependencies": [
           "5"
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [],
         "complexity": 4,
         "recommendedSubtasks": 3,
-        "expansionPrompt": "CapsuleListWithFilters 클라이언트 컴포넌트 신규 생성 및 useMemo 기반 필터링 로직 구현, CapsuleSearch 컴포넌트 props 인터페이스 확인 및 수정, IntensityFilter 컴포넌트에 selectedIntensity props 및 초기화 버튼 추가를 각 서브태스크로 구성하세요."
+        "expansionPrompt": "CapsuleListWithFilters 클라이언트 컴포넌트 신규 생성 및 useMemo 기반 필터링 로직 구현, CapsuleSearch 컴포넌트 props 인터페이스 확인 및 수정, IntensityFilter 컴포넌트에 selectedIntensity props 및 초기화 버튼 추가를 각 서브태스크로 구성하세요.",
+        "updatedAt": "2026-03-14T08:35:32.009Z"
       },
       {
         "id": "9",
@@ -176,9 +180,9 @@
     ],
     "metadata": {
       "version": "1.0.0",
-      "lastModified": "2026-03-13T16:01:46.630Z",
+      "lastModified": "2026-03-14T08:35:32.010Z",
       "taskCount": 10,
-      "completedCount": 4,
+      "completedCount": 8,
       "tags": [
         "master"
       ]
