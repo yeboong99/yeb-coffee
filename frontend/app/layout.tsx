@@ -17,7 +17,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "캡슐 커피 커뮤니티",
+  title: {
+    default: "캡슐 커피 커뮤니티",
+    template: "%s | 캡슐 커피 커뮤니티",
+  },
   description: "네스프레소, 돌체구스토, 버츄오 캡슐 정보 및 리뷰 커뮤니티",
 };
 

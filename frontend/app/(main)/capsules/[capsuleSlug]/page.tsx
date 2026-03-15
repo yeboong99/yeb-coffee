@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -16,6 +17,27 @@ export const revalidate = 3600;
 
 interface Props {
   params: Promise<{ capsuleSlug: string }>;
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { capsuleSlug } = await params;
+  const capsule = await getCapsuleBySlug(capsuleSlug);
+
+  if (!capsule) {
+    return { title: "캡슐을 찾을 수 없습니다" };
+  }
+
+  const flavorPart =
+    capsule.flavorNotes.length > 0
+      ? `, 향미: ${capsule.flavorNotes.join(", ")}`
+      : "";
+  const intensityPart =
+    capsule.intensity != null ? ` — 강도 ${capsule.intensity}` : "";
+
+  return {
+    title: capsule.name,
+    description: `${capsule.name}${intensityPart}${flavorPart}`,
+  };
 }
 
 export default async function CapsulePage({ params }: Props) {

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -17,6 +18,20 @@ export async function generateStaticParams() {
 
 interface Props {
   params: Promise<{ brandSlug: string }>;
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { brandSlug } = await params;
+  const brand = await getBrandBySlug(brandSlug);
+
+  if (!brand) {
+    return { title: "브랜드를 찾을 수 없습니다" };
+  }
+
+  return {
+    title: brand.name,
+    description: brand.description || `${brand.name}의 캡슐 커피 라인업을 확인하세요.`,
+  };
 }
 
 export default async function BrandPage({ params }: Props) {
