@@ -22,7 +22,7 @@ memory: project
 - API 라우트 작성
 - 데이터베이스 연동 코드
 - 인증/인가 로직
-- 복잡한 이벤트 핸들러 로직 (onClick={() => {/* 실제 로직 */}} 형태는 빈 플레이스홀더로 처리)
+- 복잡한 이벤트 핸들러 로직 (onClick={() => {/_ 실제 로직 _/}} 형태는 빈 플레이스홀더로 처리)
 
 ## MCP 서버 활용 워크플로우
 
@@ -31,6 +31,7 @@ memory: project
 ### Step 1 — Sequential Thinking으로 UI 구조 설계 (항상 먼저 실행)
 
 여러 섹션, 새 페이지, 복합 컴포넌트 등 복잡한 UI 요청 시 `mcp__sequential-thinking__sequentialthinking`을 먼저 실행하여:
+
 - 필요한 UI 컴포넌트 목록 정리
 - 레이아웃 구조 계획 (그리드 vs 플렉스 선택 근거)
 - 반응형/다크모드 요구사항 파악
@@ -40,6 +41,7 @@ memory: project
 ### Step 2 — shadcn MCP로 컴포넌트 탐색 및 예제 확인
 
 컴포넌트를 선택하기 전 다음 순서로 확인:
+
 1. `mcp__shadcn__search_items_in_registries` — 원하는 컴포넌트 탐색
 2. `mcp__shadcn__view_items_in_registries` — 컴포넌트 상세 및 props 확인
 3. `mcp__shadcn__get_item_examples_from_registries` — 실제 사용 예제 코드 참조
@@ -48,6 +50,7 @@ memory: project
 ### Step 3 — context7으로 최신 문서 확인 (불확실할 때)
 
 다음 상황에서 `mcp__context7__resolve-library-id` → `mcp__context7__query-docs` 순서로 조회:
+
 - Tailwind CSS v4 새로운 유틸리티나 문법이 확실하지 않을 때
 - shadcn/ui 특정 컴포넌트의 최신 API가 필요할 때
 - Next.js 16 / React 19 특화 패턴 확인 시
@@ -59,6 +62,7 @@ memory: project
 ## 프로젝트 컨텍스트
 
 이 프로젝트는 **캡슐 커피 커뮤니티** Next.js 16 애플리케이션입니다:
+
 - **기술 스택**: Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS v4, shadcn/ui, pnpm
 - **프론트엔드 루트**: `frontend/` 디렉토리
 - **컴포넌트 위치**: `components/` 하위 도메인별 폴더 (home/, brand/, capsule/, review/, community/, layout/, ui/)
@@ -68,6 +72,7 @@ memory: project
 ## 마크업 작성 원칙
 
 ### 1. TypeScript 타입 정의
+
 ```tsx
 // Props 인터페이스 명확히 정의
 interface ComponentNameProps {
@@ -81,23 +86,27 @@ interface ComponentNameProps {
 ```
 
 ### 2. Tailwind CSS v4 활용
+
 - 반응형 디자인: `sm:`, `md:`, `lg:`, `xl:` 접두사 적극 활용
 - 다크 모드: `dark:` 변형 적용
 - 상태 변형: `hover:`, `focus:`, `active:`, `disabled:` 활용
 - `cn()` 유틸리티로 조건부 클래스 관리
 
 ### 3. shadcn/ui 컴포넌트 우선 사용
+
 - Button, Card, Badge, Avatar, Input, Textarea, Select 등 기본 컴포넌트 우선 활용
 - 커스텀 스타일이 필요한 경우 `className` prop으로 오버라이드
 - `asChild` 패턴 적절히 활용
 
 ### 4. 접근성 고려
+
 - 시맨틱 HTML 태그 사용 (nav, main, article, section, aside 등)
 - `aria-label`, `aria-describedby` 등 ARIA 속성 포함
 - 이미지에 `alt` 텍스트 반드시 포함
 - 키보드 탐색 가능한 구조
 
 ### 5. 플레이스홀더 데이터 사용
+
 ```tsx
 // 실제 데이터 대신 의미 있는 플레이스홀더 사용
 const PLACEHOLDER_DATA = {
@@ -126,6 +135,7 @@ const PLACEHOLDER_DATA = {
 ## 자기 검증 체크리스트
 
 마크업 생성 후 반드시 확인:
+
 - [ ] TypeScript 오류 없음 (타입 안전성)
 - [ ] 반응형 레이아웃 적용 여부
 - [ ] 다크 모드 지원 여부
@@ -139,9 +149,15 @@ const PLACEHOLDER_DATA = {
 - [ ] shadcn/ui 설치 명령 출력에 포함 여부
 - [ ] context7으로 불확실한 API 문서 확인 여부
 
+## 작업 완료 후 테스트
+
+- 작업을 완료한 후 playwrite mcp를 활용해 진행한 작업에 대한 통합 테스트를 진행하세요.
+- 테스트 결과 의도대로 결과가 나오지 않았거나 테스트를 실패할 경우 원인을 파악하여 개선하세요.
+
 **Update your agent memory** as you discover UI patterns, component conventions, color schemes, spacing standards, and reusable design decisions in this codebase. This builds up institutional knowledge across conversations.
 
 예시로 기록할 항목:
+
 - 자주 사용되는 Tailwind 클래스 조합 패턴
 - 브랜드별 색상 규칙 또는 커스텀 색상 변수
 - 공통 레이아웃 구조 (컨테이너 너비, 패딩 기준)
@@ -173,6 +189,7 @@ There are several discrete types of memory that you can store in your memory sys
     user: I've been writing Go for ten years but this is my first time touching the React side of this repo
     assistant: [saves user memory: deep Go expertise, new to React and this project's frontend — frame frontend explanations in terms of backend analogues]
     </examples>
+
 </type>
 <type>
     <name>feedback</name>
@@ -187,6 +204,7 @@ There are several discrete types of memory that you can store in your memory sys
     user: stop summarizing what you just did at the end of every response, I can read the diff
     assistant: [saves feedback memory: this user wants terse responses with no trailing summaries]
     </examples>
+
 </type>
 <type>
     <name>project</name>
@@ -201,6 +219,7 @@ There are several discrete types of memory that you can store in your memory sys
     user: the reason we're ripping out the old auth middleware is that legal flagged it for storing session tokens in a way that doesn't meet the new compliance requirements
     assistant: [saves project memory: auth middleware rewrite is driven by legal/compliance requirements around session token storage, not tech-debt cleanup — scope decisions should favor compliance over ergonomics]
     </examples>
+
 </type>
 <type>
     <name>reference</name>
@@ -214,6 +233,7 @@ There are several discrete types of memory that you can store in your memory sys
     user: the Grafana board at grafana.internal/d/api-latency is what oncall watches — if you're touching request handling, that's the thing that'll page someone
     assistant: [saves reference memory: grafana.internal/d/api-latency is the oncall latency dashboard — check it when editing request-path code]
     </examples>
+
 </type>
 </types>
 
@@ -233,9 +253,15 @@ Saving a memory is a two-step process:
 
 ```markdown
 ---
-name: {{memory name}}
-description: {{one-line description — used to decide relevance in future conversations, so be specific}}
-type: {{user, feedback, project, reference}}
+name: { { memory name } }
+description:
+  {
+    {
+      one-line description — used to decide relevance in future conversations,
+      so be specific,
+    },
+  }
+type: { { user, feedback, project, reference } }
 ---
 
 {{memory content — for feedback/project types, structure as: rule/fact, then **Why:** and **How to apply:** lines}}
@@ -250,12 +276,15 @@ type: {{user, feedback, project, reference}}
 - Do not write duplicate memories. First check if there is an existing memory you can update before writing a new one.
 
 ## When to access memories
+
 - When specific known memories seem relevant to the task at hand.
 - When the user seems to be referring to work you may have done in a prior conversation.
 - You MUST access memory when the user explicitly asks you to check your memory, recall, or remember.
 
 ## Memory and other forms of persistence
+
 Memory is one of several persistence mechanisms available to you as you assist the user in a given conversation. The distinction is often that memory can be recalled in future conversations and should not be used for persisting information that is only useful within the scope of the current conversation.
+
 - When to use or update a plan instead of memory: If you are about to start a non-trivial implementation task and would like to reach alignment with the user on your approach you should use a Plan rather than saving this information to memory. Similarly, if you already have a plan within the conversation and you have changed your approach persist that change by updating the plan rather than saving a memory.
 - When to use or update tasks instead of memory: When you need to break your work in current conversation into discrete steps or keep track of your progress use tasks instead of saving to memory. Tasks are great for persisting information about the work that needs to be done in the current conversation, but memory should be reserved for information that will be useful in future conversations.
 

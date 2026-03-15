@@ -11,7 +11,7 @@ interface PostCardProps {
 export function PostCard({ post }: PostCardProps) {
   return (
     <Link href={`/community/${post.id}`}>
-      <Card className="hover:border-primary/50 transition-colors cursor-pointer">
+      <Card className="card-ring-hover hover:-translate-y-0.5 hover:shadow-md transition-all duration-200 cursor-pointer">
         <CardContent className="py-4 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3 min-w-0">
             <Badge variant="secondary" className="shrink-0">{post.category}</Badge>

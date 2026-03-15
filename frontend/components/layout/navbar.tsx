@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu, Search } from "lucide-react";
 import { ThemeToggle } from "./theme-toggle";
@@ -28,9 +29,14 @@ export function Navbar() {
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="mx-auto flex h-14 max-w-6xl items-center px-4">
         {/* 로고 */}
-        <Link href="/" className="mr-8 flex items-center gap-2 font-semibold">
-          <span className="text-primary">☕</span>
-          <span>캡슐 커피</span>
+        <Link href="/" className="mr-8 flex items-center">
+          <Image
+            src="/logo.png"
+            alt="캡슐 커피"
+            width={160}
+            height={44}
+            className="h-10 w-auto mix-blend-multiply dark:mix-blend-normal dark:invert"
+          />
         </Link>
 
         {/* 데스크톱 네비게이션 */}

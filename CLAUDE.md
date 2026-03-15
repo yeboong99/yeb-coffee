@@ -118,3 +118,10 @@ pnpm dev       # 또는 npm run dev
 - 모든 페이지는 placeholder 데이터로 구현됨
 - 다음 단계: Notion CMS 연동 (브랜드/캡슐 실데이터), Supabase 테이블 생성 후 API 라우트 연동
 - TODO: Cloudflare Turnstile 위젯 연동 (현재 "dev-bypass" 토큰 사용 중)
+
+## 프론트엔드 작업 완료 체크리스트
+
+```bash
+npm run check-all    # 모든 검사 통과 확인
+npm run build        # 빌드 성공 확인
+```

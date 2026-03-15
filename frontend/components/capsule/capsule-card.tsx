@@ -18,7 +18,7 @@ export function CapsuleCard({ capsule, serviceRating }: CapsuleCardProps) {
   return (
     <Link href={`/capsules/${capsule.slug}`}>
       {/* 호버 시 카드 살짝 위로 이동 + 그림자 효과 */}
-      <Card className="hover:border-primary/50 hover:-translate-y-1 hover:shadow-md transition-all duration-200 cursor-pointer h-full">
+      <Card className="card-ring-hover hover:-translate-y-1 hover:shadow-md transition-all duration-200 cursor-pointer h-full">
         {/* 이미지 패딩 래퍼 - 테두리에 붙지 않도록 */}
         {capsule.imageUrl && (
           <div className="p-3 pb-0">

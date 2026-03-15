@@ -9,7 +9,7 @@ interface BrandCardProps {
 export function BrandCard({ brand }: BrandCardProps) {
   return (
     <Link href={`/brands/${brand.slug}`}>
-      <Card className="hover:border-primary/50 hover:-translate-y-1 hover:shadow-md transition-all duration-200 cursor-pointer h-full">
+      <Card className="card-ring-hover hover:-translate-y-1 hover:shadow-md transition-all duration-200 cursor-pointer h-full">
         <CardHeader>
           <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center mb-2 overflow-hidden">
             {brand.logoUrl ? (

@@ -220,6 +220,11 @@ NEXT_PUBLIC_BASE_URL
 - Notion API 연동 특이사항
 - 성능 최적화 적용 사례
 
+## 작업 완료 후 테스트
+
+- 작업을 완료한 후 playwrite mcp를 활용해 진행한 작업에 대한 통합 테스트를 진행하세요.
+- 테스트 결과 의도대로 결과가 나오지 않았거나 테스트를 실패할 경우 원인을 파악하여 개선하세요.
+
 # Persistent Agent Memory
 
 You have a persistent, file-based memory system at `/Users/yeboong99/Desktop/claude-yeb-coffee/.claude/agent-memory/nextjs-supabase-dev/`. This directory already exists — write to it directly with the Write tool (do not run mkdir or check for its existence).

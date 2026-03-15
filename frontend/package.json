@@ -6,7 +6,13 @@
     "dev": "NODE_OPTIONS='--no-deprecation' next dev --turbopack",
     "build": "NODE_OPTIONS='--no-deprecation' next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "lint:fix": "eslint, --fix",
+    "format": "prettier --write",
+    "format:check": "prettier --check .",
+    "typecheck": "tsc --noEmit",
+    "check-all": "npm run typecheck && npm run lint && npm run format",
+    "preparer": "husky"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
