@@ -9,7 +9,7 @@
 - **배포**: Vercel
 - **스팸 방지**: Cloudflare Turnstile (CAPTCHA)
 
-Phase 0~3이 완료된 상태입니다. Notion CMS 브랜드/캡슐 연동, Supabase CRUD, Turnstile 스팸 방지, 캡슐 검색/필터, 에러/빈 상태 UI까지 구현 완료되었습니다. Phase 4는 SEO 메타태그(P4-05)를 제외하고 완료. 다음 단계는 Task 10(SEO) 완료 후 Phase 5(Vercel 배포)입니다.
+**MVP 완성.** Phase 0~5 전 단계가 완료되었습니다. Notion CMS 연동, Supabase CRUD, Turnstile 스팸 방지, 검색/필터, SEO 메타태그, Vercel 프로덕션 배포까지 모두 완료. 미구현 항목: TASK-P1-10 (snake_case ↔ camelCase 매핑 유틸리티, 기술 부채로 존치).
 
 ---
 
@@ -425,7 +425,7 @@ Phase 0~3이 완료된 상태입니다. Notion CMS 브랜드/캡슐 연동, Supa
 
 ---
 
-### Phase 4: 추가 기능 — 검색, 필터, UX 완성 -- 🔄 진행 중 (P4-05 미완료)
+### Phase 4: 추가 기능 — 검색, 필터, UX 완성 -- ✅ 완료
 
 **기간**: 1일
 **목표**: 캡슐 검색/강도 필터 실제 연동, 빈 상태/에러 상태 처리, SEO 메타태그 설정
@@ -464,7 +464,7 @@ Phase 0~3이 완료된 상태입니다. Notion CMS 브랜드/캡슐 연동, Supa
   - 예상 시간: 1h
   - 완료 기준: API 에러 발생 시 사용자에게 에러 메시지와 재시도 버튼 표시
 
-- [ ] **[TASK-P4-05]** 주요 페이지 SEO 메타태그 설정
+- [x] **[TASK-P4-05]** 주요 페이지 SEO 메타태그 설정
   - 파일: `frontend/app/(main)/brands/[brandSlug]/page.tsx`, `frontend/app/(main)/capsules/[capsuleSlug]/page.tsx`
   - 예상 시간: 1h
   - 작업 내용: Next.js `generateMetadata()` 함수로 페이지별 title, description 설정
@@ -472,7 +472,7 @@ Phase 0~3이 완료된 상태입니다. Notion CMS 브랜드/캡슐 연동, Supa
 
 ---
 
-### Phase 5: 최적화 및 배포
+### Phase 5: 최적화 및 배포 -- ✅ 완료
 
 **기간**: 0.5일
 **목표**: Vercel 프로덕션 환경 변수 설정, 빌드 성공, 프로덕션 URL에서 전체 기능 동작 확인
@@ -483,26 +483,26 @@ Phase 0~3이 완료된 상태입니다. Notion CMS 브랜드/캡슐 연동, Supa
 
 #### Tasks
 
-- [ ] **[TASK-P5-01]** Vercel 프로젝트 환경 변수 설정
+- [x] **[TASK-P5-01]** Vercel 프로젝트 환경 변수 설정
   - 위치: Vercel 대시보드 → Settings → Environment Variables (외부 작업)
   - 예상 시간: 20m
   - 의존성: TASK-P0-01 ~ TASK-P0-03
   - 작업 내용: 환경 변수 체크리스트의 모든 변수를 Production, Preview, Development 환경에 설정, `NEXT_PUBLIC_BASE_URL`은 실제 Vercel 도메인으로 설정
   - 완료 기준: Vercel 대시보드에서 9개 환경 변수 모두 설정 완료
 
-- [ ] **[TASK-P5-02]** Cloudflare Turnstile 허용 도메인에 Vercel 도메인 추가
+- [x] **[TASK-P5-02]** Cloudflare Turnstile 허용 도메인에 Vercel 도메인 추가
   - 위치: Cloudflare 대시보드 (외부 작업)
   - 예상 시간: 10m
   - 의존성: TASK-P5-01
   - 완료 기준: Vercel 배포 도메인이 Turnstile 허용 도메인 목록에 포함
 
-- [ ] **[TASK-P5-03]** TypeScript 빌드 에러 및 ESLint 경고 점검
+- [x] **[TASK-P5-03]** TypeScript 빌드 에러 및 ESLint 경고 점검
   - 위치: `frontend/` 디렉토리
   - 예상 시간: 1h
   - 작업 내용: `pnpm build` 실행 후 에러 모두 해결
   - 완료 기준: `pnpm build` 에러 0건
 
-- [ ] **[TASK-P5-04]** Vercel 배포 및 프로덕션 E2E 검증
+- [x] **[TASK-P5-04]** Vercel 배포 및 프로덕션 E2E 검증
   - 위치: Vercel 대시보드 또는 `vercel` CLI
   - 예상 시간: 1h
   - 의존성: TASK-P5-01, TASK-P5-02, TASK-P5-03
@@ -579,10 +579,10 @@ Phase 0~3이 완료된 상태입니다. Notion CMS 브랜드/캡슐 연동, Supa
 
 ### Vercel
 
-- [ ] 프로젝트 Git 연동 (`frontend/` 디렉토리를 Root Directory로 설정)
-- [ ] 9개 환경 변수 모두 설정
-- [ ] `NEXT_PUBLIC_BASE_URL`을 Vercel 배포 도메인으로 설정
-- [ ] 빌드 커맨드: `pnpm build`, 출력 디렉토리: `.next` 확인
+- [x] 프로젝트 Git 연동 (`frontend/` 디렉토리를 Root Directory로 설정)
+- [x] 9개 환경 변수 모두 설정
+- [x] `NEXT_PUBLIC_BASE_URL`을 Vercel 배포 도메인으로 설정
+- [x] 빌드 커맨드: `pnpm build`, 출력 디렉토리: `.next` 확인
 
 ---
 
@@ -590,20 +590,20 @@ Phase 0~3이 완료된 상태입니다. Notion CMS 브랜드/캡슐 연동, Supa
 
 ### 기능적 완료 기준
 
-- [ ] 브랜드 목록 페이지에서 Notion 실데이터 브랜드 1개 이상 렌더링
-- [ ] 브랜드별 캡슐 목록 페이지에서 실데이터 캡슐 1개 이상 렌더링
-- [ ] 캡슐 상세 페이지에서 리뷰 작성 후 목록에 즉시 반영
-- [ ] 커뮤니티 게시글 작성 후 목록에서 확인 가능
-- [ ] 게시글 상세에서 댓글 작성 후 목록에 즉시 반영
-- [ ] Turnstile 위젯 미완료 시 폼 제출 불가
-- [ ] 잘못된 Turnstile 토큰으로 API 요청 시 400 에러 반환
-- [ ] Vercel 프로덕션 배포 성공 (`pnpm build` 에러 0건)
+- [x] 브랜드 목록 페이지에서 Notion 실데이터 브랜드 1개 이상 렌더링
+- [x] 브랜드별 캡슐 목록 페이지에서 실데이터 캡슐 1개 이상 렌더링
+- [x] 캡슐 상세 페이지에서 리뷰 작성 후 목록에 즉시 반영
+- [x] 커뮤니티 게시글 작성 후 목록에서 확인 가능
+- [x] 게시글 상세에서 댓글 작성 후 목록에 즉시 반영
+- [x] Turnstile 위젯 미완료 시 폼 제출 불가
+- [x] 잘못된 Turnstile 토큰으로 API 요청 시 400 에러 반환
+- [x] Vercel 프로덕션 배포 성공 (`pnpm build` 에러 0건)
 
 ### 비기능적 완료 기준
 
-- [ ] Notion 데이터 페이지 ISR 캐시 적용 (revalidate: 3600)
-- [ ] Supabase RLS로 anon 키 직접 쓰기 차단
-- [ ] `SUPABASE_SERVICE_ROLE_KEY`가 클라이언트 번들에 미포함 확인
+- [x] Notion 데이터 페이지 ISR 캐시 적용 (revalidate: 3600)
+- [x] Supabase RLS로 anon 키 직접 쓰기 차단
+- [x] `SUPABASE_SERVICE_ROLE_KEY`가 클라이언트 번들에 미포함 확인
 
 ---
 
@@ -611,6 +611,7 @@ Phase 0~3이 완료된 상태입니다. Notion CMS 브랜드/캡슐 연동, Supa
 
 | 날짜       | 버전  | 변경 내용                                                                                                                                                                                                             | 작성자               |
 | ---------- | ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
+| 2026-03-15 | 1.4.0 | MVP 완성 동기화 — Phase 4 완료(P4-05 SEO 메타태그), Phase 5 완료(P5-01~04 Vercel 배포), 성공 지표 전체 완료, Vercel 체크리스트 완료 | claude (update-roadmap 커맨드) |
 | 2026-03-15 | 1.3.0 | 코드 검증 후 동기화 — Phase 2 완료(P2-01~04), Phase 3 완료(P3-01/02/04/05/07/08/10/11), Phase 4 부분 완료(P4-01~04), Phase 헤더 업데이트 | claude (update-roadmap 커맨드) |
 | 2026-03-14 | 1.2.0 | 진행 상황 반영 — Phase 0, Phase 1 완료 표시, Turnstile 폼 연동(P3-03/06/09) 완료, 환경 변수/외부 서비스 체크리스트 업데이트, 현재 상태 섹션 갱신 | claude               |
 | 2026-03-13 | 1.1.0 | Phase 구조 재편 — 공통 모듈 Phase 신설(기존 7→6 Phase), Phase 간 순서 근거 추가, Turnstile 위젯을 Phase 1로 이동, CRUD+스팸 방지 통합(Phase 3), SEO를 Phase 4로 이동, 태스크 번호 재편성, snake_case 매핑 태스크 신설 | claude               |
