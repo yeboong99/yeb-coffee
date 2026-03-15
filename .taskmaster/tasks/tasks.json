@@ -147,14 +147,31 @@
         "testStrategy": "- 존재하지 않는 URL 접근 시 404 페이지 표시 확인\n- API 에러 발생 시 error.tsx가 작동하고 '다시 시도' 버튼으로 복구 가능한지 확인\n- 데이터 로딩 중 loading.tsx의 스켈레톤이 표시되는지 확인\n- 빈 데이터인 경우 적절한 안내 메시지가 표시되는지 확인",
         "priority": "medium",
         "dependencies": [],
-        "status": "pending",
+        "status": "done",
         "subtasks": [],
         "complexity": 3,
         "recommendedSubtasks": 3,
-        "expansionPrompt": "error.tsx와 not-found.tsx 개선, loading.tsx 스켈레톤 UI 추가, EmptyState 재사용 가능 컴포넌트 생성 및 기존 페이지에 적용을 각 서브태스크로 구성하세요."
+        "expansionPrompt": "error.tsx와 not-found.tsx 개선, loading.tsx 스켈레톤 UI 추가, EmptyState 재사용 가능 컴포넌트 생성 및 기존 페이지에 적용을 각 서브태스크로 구성하세요.",
+        "updatedAt": "2026-03-15T05:14:14.025Z"
       },
       {
         "id": "10",
+        "title": "SEO 메타태그 설정",
+        "description": "브랜드 및 캡슐 상세 페이지에 generateMetadata()를 사용하여 페이지별 고유 title, description 메타태그 설정",
+        "details": "## 구현 내용\n\n### 1. 브랜드별 캡슐 목록 페이지 메타태그\n\n`frontend/app/(main)/brands/[brandSlug]/page.tsx`:\n\n```typescript\nexport async function generateMetadata({ params }: Props): Promise<Metadata> {\n  const { brandSlug } = await params;\n  const brand = await getBrandBySlug(brandSlug);\n\n  if (!brand) {\n    return { title: '브랜드를 찾을 수 없습니다' };\n  }\n\n  return {\n    title: `${brand.name} | 캡슐 커피 커뮤니티`,\n    description: brand.description || `${brand.name}의 캡슐 커피 라인업을 확인하세요.`,\n  };\n}\n```\n\n### 2. 캡슐 상세 페이지 메타태그\n\n`frontend/app/(main)/capsules/[capsuleSlug]/page.tsx`:\n\n```typescript\nexport async function generateMetadata({ params }: Props): Promise<Metadata> {\n  const { capsuleSlug } = await params;\n  const capsule = await getCapsuleBySlug(capsuleSlug);\n\n  if (!capsule) {\n    return { title: '캡슐을 찾을 수 없습니다' };\n  }\n\n  return {\n    title: `${capsule.name} | 캡슐 커피 커뮤니티`,\n    description: `${capsule.name} — 강도 ${capsule.intensity}, 향미: ${capsule.flavorNotes.join(', ')}`,\n  };\n}\n```\n\n### 3. 루트 레이아웃 기본 메타태그 확인\n\n`frontend/app/layout.tsx`에 기본 메타태그가 없다면 추가:\n\n```typescript\nexport const metadata: Metadata = {\n  title: {\n    default: '캡슐 커피 커뮤니티',\n    template: '%s | 캡슐 커피 커뮤니티',\n  },\n  description: '네스프레소, 돌체구스토, 버츄오 캡슐 커피 정보와 리뷰 커뮤니티',\n};\n```\n\n## 주의사항\n- `generateMetadata()`는 서버 컴포넌트에서만 사용 가능\n- Notion 조회 결과가 null인 경우 기본 메타태그 반환 필수",
+        "testStrategy": "- 브랜드 상세 페이지 접속 후 브라우저 탭 타이틀이 \"{브랜드명} | 캡슐 커피 커뮤니티\"로 표시되는지 확인\n- 캡슐 상세 페이지에서 고유한 title과 description이 렌더링되는지 HTML 소스 확인\n- 존재하지 않는 slug 접근 시 기본 메타태그가 표시되는지 확인",
+        "priority": "medium",
+        "dependencies": [
+          "5"
+        ],
+        "status": "pending",
+        "subtasks": [],
+        "complexity": 5,
+        "recommendedSubtasks": 4,
+        "expansionPrompt": "TypeScript 빌드 에러 수정 및 ESLint 경고 해결, Vercel 프로젝트 생성 및 환경 변수 설정, Cloudflare Turnstile 허용 도메인 추가 및 배포 실행, 프로덕션 E2E 검증 체크리스트 실행 및 보안 점검을 각 서브태스크로 구성하세요."
+      },
+      {
+        "id": "11",
         "title": "Vercel 프로덕션 배포 및 E2E 검증",
         "description": "환경 변수 설정, TypeScript 빌드 검증, Vercel 배포 후 전체 사용자 여정 테스트",
         "details": "## 구현 내용\n\n### 1. TypeScript 및 ESLint 에러 수정\n\n```bash\ncd frontend\npnpm build\n```\n\n모든 타입 에러 및 린트 경고 해결\n\n### 2. Vercel 프로젝트 환경 변수 설정\n\nVercel 대시보드 → Settings → Environment Variables에서 다음 9개 변수를 Production, Preview, Development 환경에 모두 설정:\n\n```\nNOTION_API_KEY\nNOTION_BRAND_DATABASE_ID\nNOTION_CAPSULE_DATABASE_ID\nNEXT_PUBLIC_SUPABASE_URL\nNEXT_PUBLIC_SUPABASE_ANON_KEY\nSUPABASE_SERVICE_ROLE_KEY\nNEXT_PUBLIC_TURNSTILE_SITE_KEY\nTURNSTILE_SECRET_KEY\nNEXT_PUBLIC_BASE_URL (실제 Vercel 도메인으로 설정, 예: https://your-app.vercel.app)\n```\n\n### 3. Cloudflare Turnstile 허용 도메인 추가\n\nCloudflare 대시보드 → Turnstile → 사이트 설정 → Domains에 Vercel 배포 도메인 추가\n\n### 4. Vercel 배포\n\n#### Git 기반 배포 (권장)\n```bash\ngit add .\ngit commit -m \"feat: 캡슐 커피 커뮤니티 MVP 완성\"\ngit push origin main\n```\n\nVercel이 자동으로 빌드 및 배포\n\n#### CLI 배포\n```bash\nvercel --prod\n```\n\n### 5. 프로덕션 E2E 검증 체크리스트\n\n**브랜드 & 캡슐 (Notion CMS)**\n- [ ] 홈 페이지에서 브랜드 쇼케이스 렌더링\n- [ ] 브랜드 목록 페이지에서 Notion 실데이터 표시\n- [ ] 특정 브랜드 클릭 시 캡슐 목록 표시\n- [ ] 캡슐 상세 페이지에서 정보 렌더링\n- [ ] 캡슐 검색 및 강도 필터 작동\n\n**리뷰 (Supabase)**\n- [ ] 캡슐 상세에서 기존 리뷰 목록 표시\n- [ ] Turnstile 위젯 렌더링 및 완료 가능\n- [ ] 리뷰 작성 후 Supabase에 저장 및 목록에 즉시 반영\n- [ ] 잘못된 토큰으로 API 호출 시 400 에러\n\n**커뮤니티 (Supabase)**\n- [ ] 게시글 목록 페이지에서 실데이터 표시\n- [ ] 카테고리 필터링 작동\n- [ ] 게시글 작성 후 목록에 반영\n- [ ] 게시글 상세 접근 시 조회수 증가\n- [ ] 댓글 작성 후 comment_count 자동 증가\n\n**에러 처리**\n- [ ] 존재하지 않는 URL 접근 시 404 페이지\n- [ ] API 에러 발생 시 적절한 에러 메시지\n\n### 6. 성능 모니터링\n\n- Vercel Analytics 활성화\n- Core Web Vitals 확인 (LCP < 2.5s, FID < 100ms, CLS < 0.1)\n\n### 7. 보안 점검\n\n- [ ] `SUPABASE_SERVICE_ROLE_KEY`가 클라이언트 번들에 포함되지 않았는지 확인\n- [ ] Supabase RLS가 활성화되어 anon 키로 직접 INSERT 불가능한지 확인\n- [ ] Turnstile 서버 검증이 모든 POST 엔드포인트에서 작동하는지 확인\n\n## 롤백 계획\n\n문제 발생 시:\n1. Vercel 대시보드에서 이전 배포로 롤백\n2. 또는 `vercel rollback [deployment-url]` 명령 사용",
@@ -169,7 +186,8 @@
           "6",
           "7",
           "8",
-          "9"
+          "9",
+          "10"
         ],
         "status": "pending",
         "subtasks": [],
@@ -180,9 +198,9 @@
     ],
     "metadata": {
       "version": "1.0.0",
-      "lastModified": "2026-03-14T08:35:32.010Z",
-      "taskCount": 10,
-      "completedCount": 8,
+      "lastModified": "2026-03-15T05:14:14.027Z",
+      "taskCount": 11,
+      "completedCount": 9,
       "tags": [
         "master"
       ]
