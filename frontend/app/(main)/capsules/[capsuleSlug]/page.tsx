@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
 import { CapsuleDetail } from "@/components/capsule/capsule-detail";
 import { ReviewList } from "@/components/review/review-list";
 import { ReviewForm } from "@/components/review/review-form";
@@ -43,12 +44,18 @@ export default async function CapsulePage({ params }: Props) {
       <Separator className="my-10" />
 
       <section>
-        {/* Suspense로 감싸서 리뷰 로딩 중 fallback 표시 */}
+        {/* Suspense로 감싸서 리뷰 로딩 중 Skeleton fallback 표시 */}
         <Suspense
           fallback={
-            <p className="text-center py-6 text-muted-foreground">
-              리뷰를 불러오는 중...
-            </p>
+            <div className="space-y-4">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="space-y-2">
+                  <Skeleton className="h-5 w-32" />
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-3/4" />
+                </div>
+              ))}
+            </div>
           }
         >
           <ReviewList capsuleSlug={capsule.slug} />
