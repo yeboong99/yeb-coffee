@@ -164,11 +164,12 @@
         "dependencies": [
           "5"
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [],
         "complexity": 5,
         "recommendedSubtasks": 4,
-        "expansionPrompt": "TypeScript 빌드 에러 수정 및 ESLint 경고 해결, Vercel 프로젝트 생성 및 환경 변수 설정, Cloudflare Turnstile 허용 도메인 추가 및 배포 실행, 프로덕션 E2E 검증 체크리스트 실행 및 보안 점검을 각 서브태스크로 구성하세요."
+        "expansionPrompt": "TypeScript 빌드 에러 수정 및 ESLint 경고 해결, Vercel 프로젝트 생성 및 환경 변수 설정, Cloudflare Turnstile 허용 도메인 추가 및 배포 실행, 프로덕션 E2E 검증 체크리스트 실행 및 보안 점검을 각 서브태스크로 구성하세요.",
+        "updatedAt": "2026-03-15T09:41:41.524Z"
       },
       {
         "id": "11",
@@ -189,18 +190,19 @@
           "9",
           "10"
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [],
         "complexity": 5,
         "recommendedSubtasks": 4,
-        "expansionPrompt": "TypeScript 빌드 에러 수정 및 ESLint 경고 해결, Vercel 프로젝트 생성 및 환경 변수 설정, Cloudflare Turnstile 허용 도메인 추가 및 배포 실행, 프로덕션 E2E 검증 체크리스트 실행 및 보안 점검을 각 서브태스크로 구성하세요."
+        "expansionPrompt": "TypeScript 빌드 에러 수정 및 ESLint 경고 해결, Vercel 프로젝트 생성 및 환경 변수 설정, Cloudflare Turnstile 허용 도메인 추가 및 배포 실행, 프로덕션 E2E 검증 체크리스트 실행 및 보안 점검을 각 서브태스크로 구성하세요.",
+        "updatedAt": "2026-03-15T10:01:12.740Z"
       }
     ],
     "metadata": {
       "version": "1.0.0",
-      "lastModified": "2026-03-15T05:14:14.027Z",
+      "lastModified": "2026-03-15T10:01:12.740Z",
       "taskCount": 11,
-      "completedCount": 9,
+      "completedCount": 11,
       "tags": [
         "master"
       ]
