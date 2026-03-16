@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { Trophy } from 'lucide-react';
 import { getAllCapsules } from '@/lib/notion';
 import { createServerSupabaseClient } from '@/lib/supabase';
 import type { Capsule } from '@/types';
@@ -52,12 +53,15 @@ export async function TopCapsules() {
 
   return (
     <section className="py-12">
-      <h2 className="text-2xl font-bold mb-8">캡슐 Top 5 랭킹</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <h2 className="text-2xl font-bold mb-8 flex items-center gap-2">
+        <Trophy className="text-yellow-400" size={28} />
+        캡슐 Top 5 랭킹
+      </h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* 쿠팡 평점 Top 5 */}
         {coupangTop5 !== null && (
-          <div>
-            <h3 className="text-lg font-semibold mb-4">쿠팡 평점 Top 5</h3>
+          <div className="rounded-xl border bg-card p-5">
+            <h3 className="text-base font-semibold mb-4 pb-3 border-b">쿠팡 평점 Top 5</h3>
             <ol className="space-y-3">
               {coupangTop5.map((capsule: Capsule, i: number) => (
                 <li key={capsule.id}>
@@ -87,8 +91,8 @@ export async function TopCapsules() {
           </div>
         )}
         {/* 서비스 평점 Top 5 */}
-        <div>
-          <h3 className="text-lg font-semibold mb-4">서비스 평점 Top 5</h3>
+        <div className="rounded-xl border bg-card p-5">
+          <h3 className="text-base font-semibold mb-4 pb-3 border-b">서비스 평점 Top 5</h3>
           {serviceTop5 === null || serviceTop5.length === 0 ? (
             <p className="text-muted-foreground text-sm py-8 text-center">
               아직 충분한 리뷰가 없습니다.

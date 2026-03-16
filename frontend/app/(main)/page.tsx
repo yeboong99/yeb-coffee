@@ -33,8 +33,8 @@ export default async function HomePage() {
     <div className="mx-auto max-w-6xl px-4">
       <HeroSection />
       <BrandShowcase brands={brands} />
-      <PopularPosts posts={posts} />
       <TopCapsules />
+      <PopularPosts posts={posts} />
     </div>
   );
 }
