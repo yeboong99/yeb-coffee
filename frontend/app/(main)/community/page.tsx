@@ -4,38 +4,11 @@ import { PostList } from "@/components/community/post-list";
 import { CategoryTabs } from "@/components/community/category-tabs";
 import { PenSquare } from "lucide-react";
 import { createServerSupabaseClient } from "@/lib/supabase";
-import type { Post, PostCategory } from "@/types";
+import { mapRowToPost, type PostRow } from "@/lib/mappers";
+import type { Post } from "@/types";
 
 // ISR: 60초마다 재검증
 export const revalidate = 60;
-
-// Supabase posts 테이블 레코드 타입 (snake_case)
-interface PostRow {
-  id: string;
-  title: string;
-  content: string;
-  category: string;
-  author_nickname: string;
-  view_count: number;
-  comment_count: number;
-  created_at: string;
-  updated_at: string;
-}
-
-// snake_case DB 레코드를 camelCase 타입으로 변환
-function mapRowToPost(row: PostRow): Post {
-  return {
-    id: row.id,
-    title: row.title,
-    content: row.content,
-    category: row.category as PostCategory,
-    authorNickname: row.author_nickname,
-    viewCount: row.view_count,
-    commentCount: row.comment_count,
-    createdAt: row.created_at,
-    updatedAt: row.updated_at,
-  };
-}
 
 interface Props {
   searchParams: Promise<{ category?: string }>;

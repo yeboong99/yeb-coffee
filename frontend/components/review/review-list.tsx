@@ -1,34 +1,11 @@
 import { createServerSupabaseClient } from "@/lib/supabase";
 import { StarRating } from "./star-rating";
 import { Separator } from "@/components/ui/separator";
+import { mapRowToReview, type ReviewRow } from "@/lib/mappers";
 import type { Review } from "@/types";
 
 interface ReviewListProps {
   capsuleSlug: string;
-}
-
-// Supabase reviews 테이블 레코드 타입 (snake_case)
-interface ReviewRow {
-  id: string;
-  capsule_id: string;
-  capsule_slug: string;
-  author_nickname: string;
-  rating: number;
-  content: string;
-  created_at: string;
-}
-
-// snake_case DB 레코드를 camelCase 타입으로 변환
-function mapRowToReview(row: ReviewRow): Review {
-  return {
-    id: row.id,
-    capsuleId: row.capsule_id,
-    capsuleSlug: row.capsule_slug,
-    authorNickname: row.author_nickname,
-    rating: row.rating as 1 | 2 | 3 | 4 | 5,
-    content: row.content,
-    createdAt: row.created_at,
-  };
 }
 
 export async function ReviewList({ capsuleSlug }: ReviewListProps) {

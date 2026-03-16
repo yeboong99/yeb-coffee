@@ -1,40 +1,14 @@
 import { HeroSection } from "@/components/home/hero-section";
 import { BrandShowcase } from "@/components/home/brand-showcase";
 import { PopularPosts } from "@/components/home/popular-posts";
+import { TopCapsules } from "@/components/home/top-capsules";
 import { getBrands } from "@/lib/notion";
 import { createServerSupabaseClient } from "@/lib/supabase";
-import type { Post, PostCategory } from "@/types";
+import { mapRowToPost, type PostRow } from "@/lib/mappers";
+import type { Post } from "@/types";
 
 // ISR: 1시간마다 재검증
 export const revalidate = 3600;
-
-// Supabase posts 테이블 레코드 타입 (snake_case)
-interface PostRow {
-  id: string;
-  title: string;
-  content: string;
-  category: string;
-  author_nickname: string;
-  view_count: number;
-  comment_count: number;
-  created_at: string;
-  updated_at: string;
-}
-
-// snake_case DB 레코드를 camelCase 타입으로 변환
-function mapRowToPost(row: PostRow): Post {
-  return {
-    id: row.id,
-    title: row.title,
-    content: row.content,
-    category: row.category as PostCategory,
-    authorNickname: row.author_nickname,
-    viewCount: row.view_count,
-    commentCount: row.comment_count,
-    createdAt: row.created_at,
-    updatedAt: row.updated_at,
-  };
-}
 
 export default async function HomePage() {
   // 전체 브랜드 중 상위 3개만 홈에 표시
@@ -60,6 +34,7 @@ export default async function HomePage() {
       <HeroSection />
       <BrandShowcase brands={brands} />
       <PopularPosts posts={posts} />
+      <TopCapsules />
     </div>
   );
 }

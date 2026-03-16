@@ -251,3 +251,46 @@ export async function getCapsuleBySlug(slug: string): Promise<Capsule | null> {
     return null;
   }
 }
+
+/** 전체 캡슐 목록 조회 (페이지네이션 반복 조회) */
+export async function getAllCapsules(): Promise<Capsule[]> {
+  try {
+    // N+1 방지: getBrands() 1회 호출 후 Map으로 캐싱
+    const brands = await getBrands();
+    const brandMap = new Map<string, Brand>();
+    for (const brand of brands) {
+      brandMap.set(brand.id, brand);
+    }
+
+    const allCapsules: Capsule[] = [];
+    let cursor: string | undefined = undefined;
+    let hasMore = true;
+
+    while (hasMore) {
+      const response = await notion.databases.query({
+        database_id: CAPSULE_DATABASE_ID,
+        start_cursor: cursor,
+        page_size: 100,
+      });
+
+      for (const page of response.results.filter(isFullPage)) {
+        const brandIds = getRelation(
+          getProperty(page.properties, 'Brand', 'brand', 'BrandId', 'brandId'),
+        );
+        const brandId = brandIds[0] ?? '';
+        const brand = brandId ? brandMap.get(brandId) : undefined;
+        allCapsules.push(
+          mapNotionPageToCapsule(page, brand?.name ?? '', brand?.slug ?? ''),
+        );
+      }
+
+      hasMore = response.has_more;
+      cursor = response.next_cursor ?? undefined;
+    }
+
+    return allCapsules;
+  } catch (error) {
+    console.error('[Notion] getAllCapsules 오류:', error);
+    return [];
+  }
+}
