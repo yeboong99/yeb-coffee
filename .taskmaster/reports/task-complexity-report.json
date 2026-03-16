@@ -1,93 +1,133 @@
 {
 	"meta": {
-		"generatedAt": "2026-03-13T12:47:29.450Z",
-		"tasksAnalyzed": 10,
-		"totalTasks": 10,
-		"analysisCount": 10,
+		"generatedAt": "2026-03-16T14:25:59.751Z",
+		"tasksAnalyzed": 15,
+		"totalTasks": 16,
+		"analysisCount": 15,
 		"thresholdScore": 5,
 		"projectName": "Task Master",
 		"usedResearch": false
 	},
 	"complexityAnalysis": [
 		{
-			"taskId": 1,
-			"taskTitle": "환경 변수 설정 및 외부 서비스 연동 준비",
-			"complexityScore": 2,
+			"taskId": 13,
+			"taskTitle": "lib/mappers.ts 생성 및 공통 매퍼 함수 추출",
+			"complexityScore": 1,
 			"recommendedSubtasks": 0,
-			"expansionPrompt": "Notion, Supabase, Cloudflare Turnstile 각 서비스의 API 키 발급 절차와 .env.local 파일 구성 단계를 세분화하세요.",
-			"reasoning": "순수한 외부 서비스 설정 작업으로 코드 변경이 거의 없습니다. 이미 .env.example 파일이 존재하며, 각 서비스 대시보드에서 키를 발급받아 복사-붙여넣기하는 수준입니다. 기술적 복잡도보다는 계정 설정 작업이 중심이므로 복잡도가 낮습니다. 단, 3개의 외부 서비스(Notion Integration 권한 설정, Supabase 리전 선택, Cloudflare Turnstile 도메인 등록)를 순서대로 처리해야 합니다. 코드베이스에서 lib/notion.ts와 lib/supabase.ts는 이미 환경 변수를 읽도록 구현되어 있어 별도 코드 수정 불필요합니다."
+			"expansionPrompt": "이 태스크는 이미 완료된 상태입니다. frontend/lib/mappers.ts 파일이 이미 존재하며 PostRow, ReviewRow 인터페이스와 mapRowToPost(), mapRowToReview() 함수가 완전히 구현되어 있습니다. page.tsx와 review-list.tsx도 이미 '@/lib/mappers'에서 import하고 있습니다.",
+			"reasoning": "코드베이스 분석 결과 frontend/lib/mappers.ts 파일이 이미 완성된 상태입니다. PostRow, ReviewRow 인터페이스와 mapRowToPost(), mapRowToReview() 함수가 모두 구현되어 있으며, app/(main)/page.tsx에서 'import { mapRowToPost, type PostRow } from @/lib/mappers', community/page.tsx와 review-list.tsx도 동일하게 mappers.ts를 참조하고 있습니다. 이 태스크는 이미 완료된 것으로 보입니다."
 		},
 		{
-			"taskId": 2,
-			"taskTitle": "Supabase 데이터베이스 테이블 생성 및 RLS 설정",
+			"taskId": 14,
+			"taskTitle": "기존 인라인 매퍼를 lib/mappers.ts import로 교체",
+			"complexityScore": 1,
+			"recommendedSubtasks": 0,
+			"expansionPrompt": "이 태스크도 이미 완료된 상태입니다. app/(main)/page.tsx (line 6), app/(main)/community/page.tsx (line 7), components/review/review-list.tsx (line 4)에서 이미 @/lib/mappers에서 import를 사용하고 있으며, 인라인 중복 정의가 없습니다.",
+			"reasoning": "코드베이스 분석 결과 3개 파일 모두 이미 lib/mappers.ts에서 import를 사용하고 있습니다. app/(main)/page.tsx는 line 6에서, community/page.tsx는 line 7에서, review-list.tsx는 line 4에서 각각 mappers를 import하고 있으며 인라인 중복 정의가 없습니다. 이 태스크는 이미 완료된 것으로 보입니다."
+		},
+		{
+			"taskId": 15,
+			"taskTitle": "getAllCapsules() Notion API 전체 조회 함수 구현",
 			"complexityScore": 4,
 			"recommendedSubtasks": 3,
-			"expansionPrompt": "3개 테이블(reviews, posts, comments) 생성 SQL, comment_count 자동 갱신 트리거 구현, RLS 정책(SELECT 공개/INSERT 서비스롤 제한) 설정을 각각 서브태스크로 분리하세요.",
-			"reasoning": "SQL DDL 작업이 중심이며 코드 변경보다는 데이터베이스 구성에 가깝습니다. 3개 테이블 스키마와 인덱스, 1개 트리거 함수, 6개 RLS 정책을 작성해야 합니다. 모든 SQL이 태스크 설명에 이미 작성되어 있어 구현 난이도는 낮지만, 트리거 로직과 RLS 보안 정책의 정확한 설정이 중요합니다. Supabase SQL Editor에서 순서대로 실행하면 되며, 실패 시 롤백이 어렵지 않습니다. service_role 키가 클라이언트에 노출되지 않도록 주의가 필요합니다."
+			"expansionPrompt": "frontend/lib/notion.ts에 getAllCapsules() 함수를 추가하세요. 기존 getBrands(), mapNotionPageToCapsule(), getRelation(), getProperty() 헬퍼 함수를 재사용합니다. 구현 단계: 1) getBrands()로 브랜드 Map 생성, 2) while 루프로 Notion pagination 처리, 3) 각 페이지 결과를 mapNotionPageToCapsule로 변환, 4) 에러 시 빈 배열 반환 처리. notion.ts 파일에는 이미 관련 헬퍼 함수들이 모두 구현되어 있어 코드 재사용이 용이합니다.",
+			"reasoning": "lib/notion.ts에는 이미 getBrands(), getBrandById(), mapNotionPageToCapsule(), getProperty(), getRelation() 등 필요한 헬퍼 함수가 모두 구현되어 있습니다. getAllCapsules()는 이들을 조합하는 함수로, Notion 페이지네이션(has_more, next_cursor) 처리와 brandMap을 활용한 N+1 최적화를 추가하면 됩니다. 기존 패턴을 그대로 따라가면 되므로 비교적 간단하지만, 페이지네이션 while 루프와 병렬 브랜드 캐싱 패턴 이해가 필요합니다."
 		},
 		{
-			"taskId": 3,
-			"taskTitle": "Notion CMS 데이터 조회 함수 구현",
-			"complexityScore": 5,
-			"recommendedSubtasks": 3,
-			"expansionPrompt": "Notion 프로퍼티 타입별 안전한 헬퍼 함수 구현, Brand/Capsule 매핑 함수 및 CRUD 조회 함수 구현, 실제 Notion DB 프로퍼티명 확인 및 대소문자 variation 처리를 각각 서브태스크로 구성하세요.",
-			"reasoning": "기존 lib/notion.ts는 클라이언트 초기화만 되어 있고 실제 데이터 조회 함수는 전혀 구현되지 않은 greenfield 작업입니다. Notion API의 프로퍼티 타입 시스템(title, rich_text, number, url, relation, checkbox 등)을 이해하고 TypeScript 타입으로 안전하게 매핑해야 합니다. Capsule 타입을 보면 brandName, brandSlug 필드가 있는데 태스크 설명의 매핑 함수에는 없어 불일치가 있습니다. 또한 실제 Notion DB의 컬럼명이 코드와 다를 수 있어 에러 처리가 중요합니다. 4개 함수(getBrands, getBrandBySlug, getCapsulesByBrandId, getCapsuleBySlug) 구현이 필요합니다."
-		},
-		{
-			"taskId": 4,
-			"taskTitle": "Turnstile React 위젯 컴포넌트 구현 및 폼 연동",
-			"complexityScore": 4,
-			"recommendedSubtasks": 3,
-			"expansionPrompt": "@marsidev/react-turnstile 패키지 설치 및 TurnstileWidget 컴포넌트 생성, ReviewForm에 turnstileToken 상태 및 위젯 통합, PostForm과 CommentForm에 동일한 패턴 적용을 각 서브태스크로 구성하세요.",
-			"reasoning": "3개의 기존 폼 컴포넌트(review-form, post-form, comment-form)를 각각 수정해야 합니다. 모든 폼이 이미 turnstileToken을 API에 전송하는 구조이나 현재 'dev-bypass' 하드코딩 값을 사용 중입니다. 패턴이 반복적이므로 한 번 구현 후 나머지에 적용하면 됩니다. 새 라이브러리 설치 1개, 새 컴포넌트 생성 1개, 기존 파일 수정 3개가 필요합니다. SSR 이슈가 있을 수 있으므로 'use client' 지시어 처리가 필요합니다."
-		},
-		{
-			"taskId": 5,
-			"taskTitle": "브랜드 및 캡슐 페이지 Notion 실데이터 연동",
-			"complexityScore": 5,
-			"recommendedSubtasks": 4,
-			"expansionPrompt": "홈 페이지 브랜드 쇼케이스 Notion 연동, 브랜드 목록 페이지 실데이터 교체, 브랜드별 캡슐 목록 페이지 실데이터 교체, 캡슐 상세 페이지 실데이터 교체 및 notFound() 처리를 각 서브태스크로 구성하세요.",
-			"reasoning": "태스크 3(Notion 함수 구현)에 의존하므로 실제 코드 변경은 비교적 간단합니다. 4개의 페이지 파일을 수정해야 하며, 각 페이지에서 placeholder 데이터를 Notion API 호출로 교체하는 작업입니다. ISR 설정(revalidate = 3600), notFound() 처리, 빈 상태 UI, Suspense 경계 설정 등을 고려해야 합니다. 또한 BrandShowcase 컴포넌트가 현재 서버/클라이언트 컴포넌트 중 어떤 형태인지 확인 후 적절히 수정해야 합니다. Capsule 타입의 brandName/brandSlug 필드가 Notion 함수에서 올바르게 채워지는지도 확인 필요합니다."
-		},
-		{
-			"taskId": 6,
-			"taskTitle": "리뷰 CRUD 기능 Supabase 실데이터 연동",
-			"complexityScore": 5,
-			"recommendedSubtasks": 3,
-			"expansionPrompt": "ReviewList를 서버 컴포넌트로 전환하여 Supabase 직접 조회 구현, 캡슐 상세 페이지에 Suspense 경계 추가, ReviewForm 제출 성공 후 router.refresh()를 통한 리스트 자동 갱신 구현을 각 서브태스크로 구성하세요.",
-			"reasoning": "기존 ReviewList 컴포넌트를 클라이언트 컴포넌트에서 서버 컴포넌트로 전환하는 아키텍처 변경이 포함됩니다. API 라우트(GET /api/reviews)는 이미 Supabase 조회 로직이 구현되어 있어 서버 컴포넌트에서 직접 Supabase를 호출하는 방식으로 변경하거나 기존 API 라우트를 활용할 수 있습니다. router.refresh() 패턴을 사용해 리뷰 제출 후 목록을 갱신하는 낙관적 업데이트 대신 서버 revalidate 방식을 사용합니다. date-fns 라이브러리(한국어 locale)가 필요할 수 있습니다."
-		},
-		{
-			"taskId": 7,
-			"taskTitle": "커뮤니티 게시글 및 댓글 CRUD 기능 Supabase 연동",
+			"taskId": 16,
+			"taskTitle": "TopCapsules 서버 컴포넌트 구현",
 			"complexityScore": 6,
 			"recommendedSubtasks": 4,
-			"expansionPrompt": "게시글 목록 페이지 Supabase 연동 및 카테고리 필터링, 게시글 상세 페이지 Supabase 연동 및 조회수 증가 로직, CommentList를 서버 컴포넌트로 전환 및 Supabase 연동, PostForm과 CommentForm의 제출 후 router.refresh() 추가를 각 서브태스크로 구성하세요.",
-			"reasoning": "태스크 6(리뷰)과 유사하지만 더 복잡합니다. 게시글 조회수 증가 로직(revalidate=0으로 동적 렌더링)과 comment_count 트리거 연동, searchParams를 통한 카테고리 필터링, PostForm 제출 후 페이지 라우팅(useRouter.push) 및 목록 갱신이 복합적으로 필요합니다. 커뮤니티 페이지의 카테고리 탭 UI도 searchParams와 연동해야 합니다. 특히 조회수 증가를 서버 컴포넌트에서 처리할 때 동시성 문제(경쟁 조건)를 고려해야 합니다. 4개 파일 수정이 필요합니다."
+			"expansionPrompt": "frontend/components/home/top-capsules.tsx를 신규 생성하세요. 구현 단계: 1) getAllCapsules()와 Supabase capsule_review_stats 뷰 병렬 조회(Promise.all), 2) 쿠팡 평점 Top5 정렬 로직 구현(null 필터링, 내림차순), 3) 서비스 평점 Top5 로직 구현(review_count >= 5 필터, 캡슐 Map 매핑), 4) 2열 그리드 UI 구현(에러 fallback, 빈 상태 메시지 처리). capsule_review_stats Supabase 뷰가 실제로 존재하는지 확인 필요합니다.",
+			"reasoning": "신규 async 서버 컴포넌트 생성이며, Notion API(getAllCapsules)와 Supabase(capsule_review_stats 뷰) 두 데이터 소스를 병렬 조회해야 합니다. 쿠팡 Top5, 서비스 Top5 각각 다른 정렬/필터 로직이 필요하고, 데이터 조회 실패 시 graceful fallback 처리도 구현해야 합니다. Next.js Image와 Link를 활용한 UI 구현, 반응형 2열 그리드 등 여러 요소가 결합되어 있어 중간 수준의 복잡도입니다. capsule_review_stats 뷰 존재 여부도 확인이 필요합니다."
 		},
 		{
-			"taskId": 8,
-			"taskTitle": "캡슐 검색 및 강도 필터 기능 구현",
+			"taskId": 17,
+			"taskTitle": "홈 페이지에 TopCapsules 컴포넌트 삽입",
+			"complexityScore": 1,
+			"recommendedSubtasks": 0,
+			"expansionPrompt": "frontend/app/(main)/page.tsx에 TopCapsules import를 추가하고, BrandShowcase 아래 PopularPosts 위에 <TopCapsules /> 컴포넌트를 삽입하세요. 현재 page.tsx는 38줄의 단순한 파일로, JSX 구조에 컴포넌트 한 줄 추가와 import 한 줄 추가로 완료됩니다.",
+			"reasoning": "현재 app/(main)/page.tsx는 38줄의 단순한 파일입니다. BrandShowcase와 PopularPosts 사이에 <TopCapsules />를 삽입하고 import를 추가하는 것으로, 실질적인 변경은 2줄에 불과합니다. 의존성인 태스크 14, 16이 완료된 후 단순 삽입 작업이므로 복잡도가 매우 낮습니다."
+		},
+		{
+			"taskId": 18,
+			"taskTitle": "GET /api/posts 커서 기반 페이지네이션 추가",
 			"complexityScore": 4,
 			"recommendedSubtasks": 3,
-			"expansionPrompt": "CapsuleListWithFilters 클라이언트 컴포넌트 신규 생성 및 useMemo 기반 필터링 로직 구현, CapsuleSearch 컴포넌트 props 인터페이스 확인 및 수정, IntensityFilter 컴포넌트에 selectedIntensity props 및 초기화 버튼 추가를 각 서브태스크로 구성하세요.",
-			"reasoning": "새로운 CapsuleListWithFilters 클라이언트 컴포넌트를 생성하고 기존 CapsuleSearch와 IntensityFilter 컴포넌트의 props를 수정하는 작업입니다. 서버/클라이언트 컴포넌트 분리(서버에서 데이터 fetch → 클라이언트로 props 전달)가 핵심입니다. useMemo를 활용한 최적화가 포함됩니다. 단, 강도가 1-13까지 있어 IntensityFilter UI가 복잡해질 수 있으며, 가로 스크롤 처리가 필요할 수 있습니다. 기존 컴포넌트들의 인터페이스를 확인하고 호환성을 유지해야 합니다."
+			"expansionPrompt": "frontend/app/api/posts/route.ts의 GET 함수를 수정하세요. 구현 단계: 1) cursor, limit 쿼리 파라미터 파싱 추가(limit 최대 50 제한), 2) cursor가 있으면 .lt('created_at', cursor) 조건 추가, 3) N+1 패턴(limit+1 조회)으로 hasMore 판별 후 PaginatedResponse<Post> 형식으로 응답. 기존 POST 핸들러는 그대로 유지하고 GET 핸들러만 수정합니다.",
+			"reasoning": "현재 route.ts의 GET 핸들러는 22줄의 단순한 구현입니다. cursor/limit 파라미터 파싱, Supabase 쿼리에 .lt() 조건 추가, N+1 패턴의 hasMore 판별, PaginatedResponse 형식의 응답 반환 순으로 수정해야 합니다. 기존 코드 구조가 명확하고 태스크 설명에 구현 코드가 제시되어 있어 비교적 간단하지만, 페이지네이션 로직의 정확성(cursor 처리, hasMore 판별) 검증이 필요합니다."
 		},
 		{
-			"taskId": 9,
-			"taskTitle": "에러 처리 및 빈 상태 UI 개선",
+			"taskId": 19,
+			"taskTitle": "lib/api.ts getPosts() 시그니처 변경",
+			"complexityScore": 2,
+			"recommendedSubtasks": 0,
+			"expansionPrompt": "frontend/lib/api.ts의 getPosts() 함수를 PaginatedResponse<Post> 반환 타입과 커서 기반 파라미터로 변경하세요. 현재 getPosts(category?: string): Promise<Post[]>를 getPosts(params?: {category?, cursor?, limit?}): Promise<PaginatedResponse<Post>>로 변경하고, URLSearchParams를 이용한 URL 조합 로직을 구현합니다. PaginatedResponse는 types/index.ts에 이미 정의되어 있습니다.",
+			"reasoning": "lib/api.ts는 65줄의 단순한 파일입니다. getPosts() 함수 시그니처 변경과 URLSearchParams 기반 URL 조합 로직 추가가 전부입니다. PaginatedResponse<T> 타입은 types/index.ts에 이미 정의되어 있어 별도 타입 정의가 불필요합니다. 그러나 기존 getPosts() 호출 위치(주로 커뮤니티 페이지 서버 사이드)가 API 함수를 직접 사용하지 않고 Supabase를 직접 호출하는 형태여서 breaking change 영향이 제한적입니다."
+		},
+		{
+			"taskId": 20,
+			"taskTitle": "PostListInfinite 클라이언트 컴포넌트 구현",
+			"complexityScore": 6,
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "frontend/components/community/post-list-infinite.tsx를 신규 생성하세요. 구현 단계: 1) useInfiniteQuery 설정(queryKey에 category 포함, initialData 주입, getNextPageParam 구현), 2) IntersectionObserver를 이용한 하단 감지 + fetchNextPage 트리거, 3) Skeleton 로딩 UI(isFetchingNextPage 시 3개), 4) 모든 게시글 로드 완료 메시지(hasNextPage false + posts.length > 0). PostCard 컴포넌트는 이미 존재합니다.",
+			"reasoning": "React Query v5의 useInfiniteQuery와 IntersectionObserver를 조합하는 클라이언트 컴포넌트입니다. initialData 형식이 {pages: [initialData], pageParams: [undefined]} 형태여야 하는 React Query v5 특유의 구조 이해가 필요합니다. 카테고리 전환 시 queryKey 분리로 자동 캐시 분리, IntersectionObserver 설정과 cleanup, 스켈레톤 UI까지 여러 요소를 조합해야 합니다. 신규 파일 생성이지만 요구사항이 명확하고 기존 PostCard 등 컴포넌트를 재사용합니다."
+		},
+		{
+			"taskId": 21,
+			"taskTitle": "커뮤니티 목록 페이지 하이브리드 렌더링 적용",
+			"complexityScore": 4,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "frontend/app/(main)/community/page.tsx를 수정하세요. 구현 단계: 1) Supabase 쿼리에 limit(LIMIT+1) 패턴 추가하여 hasMore 판별, 2) PaginatedResponse<Post> 형식의 initialData 구성, 3) <PostList posts={posts} />를 <PostListInfinite initialData={initialData} category={category} />로 교체 및 import 변경. 현재 파일은 67줄로 단순하며, 태스크 14에서 이미 mapRowToPost import가 처리된 상태입니다.",
+			"reasoning": "현재 community/page.tsx는 67줄의 단순한 서버 컴포넌트입니다. 기존 Supabase 쿼리에 limit+1 패턴을 추가하고, 결과를 PaginatedResponse 형식으로 변환하여 PostListInfinite에 전달하는 형태로 변경합니다. 주요 변경은 쿼리 로직 수정과 JSX에서 컴포넌트 교체이며, 복잡한 리팩토링보다는 점진적 수정에 가깝습니다. PostListInfinite(태스크 20) 구현 완료가 선행되어야 합니다."
+		},
+		{
+			"taskId": 22,
+			"taskTitle": "GET /api/reviews 커서 기반 페이지네이션 추가",
+			"complexityScore": 4,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "frontend/app/api/reviews/route.ts의 GET 함수를 수정하세요. 구현 단계: 1) cursor, limit 파라미터 파싱(기본값 5, 최대 20), 2) cursor가 있으면 .lt('created_at', cursor) 조건 추가, 3) N+1 패턴(limit+1 조회)으로 hasMore 판별 후 PaginatedResponse<Review> 형식으로 응답. 태스크 18(posts 페이지네이션)과 동일한 패턴이므로 해당 구현을 참고합니다.",
+			"reasoning": "태스크 18의 posts 페이지네이션과 동일한 패턴입니다. 현재 reviews route.ts는 62줄로 단순하며, cursor/limit 파라미터 파싱, .lt() 조건, N+1 패턴의 hasMore 판별, PaginatedResponse 응답 형식 변경이 전부입니다. capsuleSlug 필수 검증이 이미 구현되어 있어 그 부분은 유지됩니다. 기본 limit이 5(posts의 10과 다름)라는 점만 주의하면 됩니다."
+		},
+		{
+			"taskId": 23,
+			"taskTitle": "lib/api.ts getReviews() 시그니처 변경",
+			"complexityScore": 2,
+			"recommendedSubtasks": 0,
+			"expansionPrompt": "frontend/lib/api.ts의 getReviews() 함수를 PaginatedResponse<Review> 반환 타입과 선택적 cursor/limit 파라미터로 변경하세요. 현재 getReviews(capsuleSlug: string): Promise<Review[]>를 getReviews(capsuleSlug: string, params?: {cursor?, limit?}): Promise<PaginatedResponse<Review>>로 변경하고, URLSearchParams로 URL을 조합합니다. 태스크 19(getPosts 변경)와 동일한 패턴입니다.",
+			"reasoning": "태스크 19의 getPosts() 변경과 동일한 패턴의 단순 시그니처 변경입니다. capsuleSlug는 필수 파라미터로 유지하면서 cursor와 limit을 optional로 추가합니다. PaginatedResponse<T>는 이미 정의되어 있고, 기존 함수 로직이 URLSearchParams로만 바뀌는 단순한 변경입니다."
+		},
+		{
+			"taskId": 24,
+			"taskTitle": "review-form.tsx에서 router.refresh() 제거",
+			"complexityScore": 1,
+			"recommendedSubtasks": 0,
+			"expansionPrompt": "frontend/components/review/review-form.tsx의 onSubmit 핸들러에서 router.refresh() 호출(line 71)을 제거하고, 연관된 useRouter import(line 4)와 const router 선언(line 32)도 함께 제거하세요. onSuccess?.() 콜백은 그대로 유지합니다.",
+			"reasoning": "현재 review-form.tsx를 확인하면 line 4에 useRouter import, line 32에 const router 선언, line 71에 router.refresh() 호출이 존재합니다. 이 3줄을 제거하는 단순한 코드 수정이며 동작 변경은 최소화됩니다. ReviewListInfinite에서 invalidateQueries로 데이터 갱신을 처리하므로 router.refresh()가 불필요해집니다."
+		},
+		{
+			"taskId": 25,
+			"taskTitle": "ReviewListInfinite 클라이언트 컴포넌트 구현",
+			"complexityScore": 6,
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "frontend/components/review/review-list-infinite.tsx를 신규 생성하세요. 구현 단계: 1) useInfiniteQuery 설정(queryKey ['reviews', capsuleSlug], initialData 주입, getNextPageParam 구현), 2) 리뷰 목록 렌더링(StarRating, Separator 재사용, 기존 review-list.tsx의 UI 패턴 참고), 3) '더보기' 버튼 구현(Button + Loader2 스피너, isFetchingNextPage 상태 반영), 4) ReviewForm 내장 및 handleReviewSuccess에서 queryClient.invalidateQueries 호출.",
+			"reasoning": "태스크 20(PostListInfinite)과 유사한 패턴이지만 IntersectionObserver 대신 '더보기' 버튼을 사용하며, ReviewForm 컴포넌트를 내장하고 invalidateQueries로 갱신하는 추가 책임이 있습니다. useQueryClient, useInfiniteQuery, 기존 review-list.tsx UI 패턴 재현, ReviewForm 통합까지 복합적인 구현이 필요합니다. 기존 review-list.tsx의 렌더링 패턴을 참고하여 일관성을 유지해야 합니다."
+		},
+		{
+			"taskId": 26,
+			"taskTitle": "캡슐 상세 페이지 하이브리드 렌더링 적용",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "frontend/app/(main)/capsules/[capsuleSlug]/page.tsx를 수정하세요. 구현 단계: 1) Supabase로 리뷰 첫 5개 직접 조회(limit+1 패턴), PaginatedResponse<Review> 형식의 initialReviews 구성, 2) 기존 Suspense + ReviewList + ReviewForm 블록을 <ReviewListInfinite capsuleId={...} capsuleSlug={...} initialData={initialReviews} />로 교체, 3) 불필요해진 ReviewList, ReviewForm import 제거. ReviewListInfinite(태스크 25) 구현 완료가 선행되어야 합니다.",
+			"reasoning": "현재 capsules/[capsuleSlug]/page.tsx는 96줄로, Suspense로 ReviewList를 감싸고 별도 섹션에 ReviewForm을 배치하는 구조입니다. 이를 ReviewListInfinite 단일 컴포넌트로 대체하면서 서버 사이드 리뷰 초기 조회 로직을 추가해야 합니다. 기존 Suspense 구조 제거, import 정리, Supabase 직접 조회 로직 추가가 필요하며, 변경 범위가 비교적 광범위하지만 패턴이 명확합니다."
+		},
+		{
+			"taskId": 27,
+			"taskTitle": "전체 빌드 검증 및 기존 기능 회귀 테스트",
 			"complexityScore": 3,
 			"recommendedSubtasks": 3,
-			"expansionPrompt": "error.tsx와 not-found.tsx 개선, loading.tsx 스켈레톤 UI 추가, EmptyState 재사용 가능 컴포넌트 생성 및 기존 페이지에 적용을 각 서브태스크로 구성하세요.",
-			"reasoning": "이미 error.tsx와 not-found.tsx가 존재하므로 개선 작업입니다. 새로운 파일은 loading.tsx와 empty-state.tsx 컴포넌트 2개를 생성합니다. shadcn/ui의 Skeleton 컴포넌트를 활용하면 구현이 간단합니다. API 라우트의 에러 응답 표준화도 포함되지만, 이미 각 API 라우트에서 try-catch 패턴이 사용되어 있어 수정이 크지 않습니다. 의존성이 없어 다른 태스크와 병렬 진행 가능합니다. 복잡도가 낮고 반복적인 작업입니다."
-		},
-		{
-			"taskId": 10,
-			"taskTitle": "Vercel 프로덕션 배포 및 E2E 검증",
-			"complexityScore": 5,
-			"recommendedSubtasks": 4,
-			"expansionPrompt": "TypeScript 빌드 에러 수정 및 ESLint 경고 해결, Vercel 프로젝트 생성 및 환경 변수 설정, Cloudflare Turnstile 허용 도메인 추가 및 배포 실행, 프로덕션 E2E 검증 체크리스트 실행 및 보안 점검을 각 서브태스크로 구성하세요.",
-			"reasoning": "모든 이전 태스크(1-9)에 의존하는 최종 배포 단계입니다. TypeScript 빌드를 통과해야 하며, 실제 빌드 시 타입 에러가 발생할 가능성이 있습니다(특히 Capsule 타입의 brandName/brandSlug 필드가 Notion 매핑 함수에서 처리되는지 여부). Vercel 환경 변수 설정, Cloudflare Turnstile 도메인 추가, E2E 검증이 포함됩니다. 배포 후 실제 검증이 필요하며, 예상치 못한 프로덕션 환경 이슈(ISR 캐시, 환경 변수 접근, CORS 등)가 발생할 수 있어 디버깅 시간이 필요할 수 있습니다."
+			"expansionPrompt": "v2 기능 구현 완료 후 최종 검증을 수행하세요. 단계: 1) npm run check-all(typecheck + lint + format) 실행 및 모든 에러 수정, 2) npm run build 빌드 성공 확인 및 빌드 에러 해결, 3) 로컬 개발 서버에서 홈 페이지(TopCapsules 섹션), 커뮤니티(무한 스크롤), 캡슐 상세(리뷰 더보기) 시나리오별 동작 검증 및 기존 F001~F012 기능 회귀 테스트. 빌드 에러가 발생하면 해당 태스크로 돌아가 수정합니다.",
+			"reasoning": "이 태스크는 코드 구현이 아닌 통합 검증 단계입니다. npm run check-all과 npm run build 실행 자체는 단순하지만, 빌드 에러나 타입 에러 발생 시 원인 파악과 수정이 필요합니다. 여러 태스크(17, 21, 26)의 완료를 전제로 하므로 의존성이 높고, 실제 브라우저 테스트를 통한 시나리오 검증도 포함됩니다. 단순 명령어 실행이지만 에러 대응 능력이 필요합니다."
 		}
 	]
 }

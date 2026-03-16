@@ -116,6 +116,11 @@ const PLACEHOLDER_DATA = {
 };
 ```
 
+### 6. 개발 완료 시 테스트
+
+- 요구사항에 대한 개발 완료 시 반드시 테스트를 작성하여 검증
+- 필요 시 PlayWrite MCP 적극 활용
+
 ## 출력 형식
 
 각 컴포넌트 생성 시 다음 순서로 제공합니다:
@@ -149,9 +154,10 @@ const PLACEHOLDER_DATA = {
 - [ ] shadcn/ui 설치 명령 출력에 포함 여부
 - [ ] context7으로 불확실한 API 문서 확인 여부
 
-## 작업 완료 후 테스트
+## 테스트 및 검증 원칙
 
-- 작업을 완료한 후 playwrite mcp를 활용해 진행한 작업에 대한 통합 테스트를 진행하세요.
+- 각 단계(Phase) 또는 기능 단위 개발 완료 시마다 반드시 테스트를 작성하여 검증하세요.
+- 필요한 경우 Playwright MCP를 적극적으로 활용하여 E2E 테스트를 수행하며 진행하세요.
 - 테스트 결과 의도대로 결과가 나오지 않았거나 테스트를 실패할 경우 원인을 파악하여 개선하세요.
 
 **Update your agent memory** as you discover UI patterns, component conventions, color schemes, spacing standards, and reusable design decisions in this codebase. This builds up institutional knowledge across conversations.

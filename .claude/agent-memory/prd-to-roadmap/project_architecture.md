@@ -1,6 +1,6 @@
 ---
 name: 캡슐 커피 커뮤니티 프로젝트 아키텍처 결정 사항
-description: 로드맵 생성 중 파악한 핵심 아키텍처 결정 사항 및 코드베이스 패턴
+description: 로드맵 생성 중 파악한 핵심 아키텍처 결정 사항 및 코드베이스 패턴 (v2 업데이트)
 type: project
 ---
 
@@ -12,29 +12,30 @@ type: project
 
 ### 인증 방식
 - 사용자 인증 없음 (완전 익명)
-- 스팸 방지: Cloudflare Turnstile CAPTCHA (클라이언트 위젯 + 서버 토큰 검증)
-- `"dev-bypass"` 토큰이 현재 모든 폼에 하드코딩되어 있음 (Phase 4에서 교체 필요)
+- 스팸 방지: Cloudflare Turnstile CAPTCHA (클라이언트 위젯 + 서버 토큰 검증) 연동 완료
 
 ### Supabase 접근 패턴
 - 읽기: anon 키 또는 service_role 키 모두 가능 (RLS로 제어)
 - 쓰기: API 라우트에서 service_role 키(`createServerSupabaseClient()`)만 사용
-- `SUPABASE_SERVICE_ROLE_KEY`는 `NEXT_PUBLIC_` 접두사 없이 서버 전용으로 올바르게 설정됨
+- `capsule_review_stats` 뷰 존재 (`capsule_slug`, `avg_rating`, `review_count`)
 
 ### 컬럼명 규칙
 - TypeScript 타입: camelCase (`authorNickname`, `capsuleSlug`)
 - Supabase 테이블: snake_case (`author_nickname`, `capsule_slug`)
 - API 라우트에서 INSERT 시 명시적 매핑 필요
+- `mapRowToPost()`, `mapRowToReview()` 매퍼 함수가 여러 파일에 인라인 중복 → v2에서 `lib/mappers.ts`로 추출 예정
 
-## 파악된 미구현 항목 (2026-03-12 기준)
-- `GET /api/posts/[postId]` 라우트 없음 (단건 게시글 조회)
-- Turnstile React 라이브러리 미설치 (`package.json`에 없음)
-- `averageRating` 데이터 소스 불명확 (Notion 저장 vs Supabase 집계)
-- `CapsuleSearch`/`IntensityFilter`가 브랜드별 캡슐 목록 페이지에 미연결
+## 현재 상태 (2026-03-16 기준)
+- MVP v1 완성 및 프로덕션 배포 완료
+- v2 PRD 작성 완료: F020 (Top 5 랭킹), F021 (게시글 무한 스크롤), F022 (리뷰 더보기)
+- v2 로드맵 작성 완료: 4개 마일스톤 (M1 공통 인프라, M2 Top 5, M3 무한 스크롤, M4 리뷰 더보기)
 
-## Phase 순서 결정 이유
-- Phase 0 (환경 설정) → Phase 1 (DB 테이블) → Phase 2 (Notion 연동) → Phase 3 (Supabase CRUD) → Phase 4 (Turnstile) → Phase 5 (UX) → Phase 6 (배포)
-- Turnstile을 Phase 4로 후순위에 배치한 이유: API 라우트에 서버 검증 로직은 이미 구현됨, 클라이언트 위젯만 연결하면 되므로 CRUD 연동 완료 후 처리해도 블로킹 없음
+## v2 로드맵 마일스톤 구조 결정 이유
+- M1 (공통 인프라) → M2 (F020) / M3 (F021) / M4 (F022) 순서
+- M1을 선행한 이유: `PaginatedResponse<T>` 타입과 `mappers.ts` 추출이 M3, M4에서 공통 의존성
+- M2/M3/M4는 서로 독립적이므로 병렬 진행 가능 (M1 완료 후)
+- Phase 순서를 사용하지 않고 마일스톤 순서를 사용한 이유: v2는 기반 인프라가 이미 완성된 상태에서 기능 추가만 하므로 Phase 0~6 전체를 사용할 필요 없음
 
-**Why:** MVP PRD 분석 결과 외부 서비스 3개 (Notion, Supabase, Turnstile) 모두 미연동 상태. 기반 인프라(DB 스키마) 없이는 CRUD 구현 불가하므로 Phase 순서가 중요.
+**Why:** v2 PRD가 3개의 독립적인 기능 추가이며 기존 인프라를 재활용하므로, 공통 인프라만 선행하면 나머지는 독립적 구현 가능.
 
-**How to apply:** 향후 로드맵 업데이트 시 Phase 순서와 의존성 체인을 유지할 것.
+**How to apply:** 향후 v3 등 고도화 시에도 기존 인프라 상태를 먼저 확인하고, 필요한 공통 작업만 선행 마일스톤으로 분리할 것.
