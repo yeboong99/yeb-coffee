@@ -15,7 +15,11 @@ interface TurnstileWidgetProps {
  * Cloudflare Turnstile CAPTCHA 위젯 컴포넌트
  * 환경 변수 NEXT_PUBLIC_TURNSTILE_SITE_KEY가 설정되어 있어야 합니다.
  */
-export function TurnstileWidget({ onSuccess, onError, onExpire }: TurnstileWidgetProps) {
+export function TurnstileWidget({
+  onSuccess,
+  onError,
+  onExpire,
+}: TurnstileWidgetProps) {
   const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 
   // 사이트 키가 없는 경우 에러 로그만 출력하고 null 반환

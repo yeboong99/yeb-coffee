@@ -1,4 +1,4 @@
-export type PostCategory = '정보공유' | '추천' | '질문' | '잡담';
+export type PostCategory = "정보공유" | "추천" | "질문" | "잡담";
 
 export interface Post {
   id: string;

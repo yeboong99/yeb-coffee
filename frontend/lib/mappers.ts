@@ -1,4 +1,4 @@
-import type { Post, PostCategory, Review } from '@/types';
+import type { Post, PostCategory, Review } from "@/types";
 
 // Supabase posts 테이블 레코드 타입 (snake_case)
 export interface PostRow {

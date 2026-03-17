@@ -29,7 +29,7 @@ export function IntensityBadge({ intensity }: IntensityBadgeProps) {
     <span
       className={cn(
         "inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-xs font-medium",
-        badge
+        badge,
       )}
     >
       강도

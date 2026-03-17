@@ -14,11 +14,14 @@ export function PostCard({ post }: PostCardProps) {
       <Card className="card-ring-hover hover:-translate-y-0.5 hover:shadow-md transition-all duration-200 cursor-pointer">
         <CardContent className="py-4 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3 min-w-0">
-            <Badge variant="secondary" className="shrink-0">{post.category}</Badge>
+            <Badge variant="secondary" className="shrink-0">
+              {post.category}
+            </Badge>
             <div className="min-w-0">
               <p className="font-medium truncate">{post.title}</p>
               <p className="text-xs text-muted-foreground mt-0.5">
-                {post.authorNickname} · {new Date(post.createdAt).toLocaleDateString("ko-KR")}
+                {post.authorNickname} ·{" "}
+                {new Date(post.createdAt).toLocaleDateString("ko-KR")}
               </p>
             </div>
           </div>

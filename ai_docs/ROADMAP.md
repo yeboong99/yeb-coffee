@@ -43,13 +43,13 @@
 
 #### Tasks
 
-- [ ] **[M1-01]** `PaginatedResponse<T>` 타입 정의
+- [x] **[M1-01]** `PaginatedResponse<T>` 타입 정의
   - 파일: `frontend/types/index.ts`
   - 예상 시간: 15m
   - 의존성: 없음
   - 완료 기준: `PaginatedResponse<T>` 인터페이스가 `{ data: T[]; nextCursor: string | null; hasMore: boolean }` 형태로 export 됨
 
-- [ ] **[M1-02]** `lib/mappers.ts` 생성 및 매퍼 함수 추출
+- [x] **[M1-02]** `lib/mappers.ts` 생성 및 매퍼 함수 추출
   - 파일: `frontend/lib/mappers.ts` (신규)
   - 예상 시간: 30m
   - 의존성: 없음
@@ -58,7 +58,7 @@
     - `mapRowToReview(row: ReviewRow): Review` 함수가 export 됨
     - `PostRow`, `ReviewRow` 인터페이스가 export 됨
 
-- [ ] **[M1-03]** 기존 인라인 매퍼를 `lib/mappers.ts` import로 교체
+- [x] **[M1-03]** 기존 인라인 매퍼를 `lib/mappers.ts` import로 교체
   - 파일: `frontend/app/(main)/page.tsx`, `frontend/app/(main)/community/page.tsx`, `frontend/components/review/review-list.tsx`
   - 예상 시간: 20m
   - 의존성: M1-02
@@ -78,7 +78,7 @@
 
 #### Tasks
 
-- [ ] **[M2-01]** `getAllCapsules()` 함수 구현
+- [x] **[M2-01]** `getAllCapsules()` 함수 구현
   - 파일: `frontend/lib/notion.ts`
   - 예상 시간: 1.5h
   - 의존성: 없음
@@ -88,7 +88,7 @@
     - 기존 `mapNotionPageToCapsule()` 재사용
     - 브랜드 정보 없는 캡슐은 빈 문자열로 처리
 
-- [ ] **[M2-02]** `TopCapsules` 서버 컴포넌트 구현
+- [x] **[M2-02]** `TopCapsules` 서버 컴포넌트 구현
   - 파일: `frontend/components/home/top-capsules.tsx` (신규)
   - 예상 시간: 2h
   - 의존성: M2-01
@@ -103,7 +103,7 @@
     - 항목 클릭 시 `/capsules/[capsuleSlug]`로 이동
     - Notion 조회 실패 시 쿠팡 Top 5 열 숨김, Supabase 조회 실패 시 서비스 Top 5 열 숨김
 
-- [ ] **[M2-03]** 홈 페이지에 `TopCapsules` 컴포넌트 삽입
+- [x] **[M2-03]** 홈 페이지에 `TopCapsules` 컴포넌트 삽입
   - 파일: `frontend/app/(main)/page.tsx`
   - 예상 시간: 15m
   - 의존성: M2-02
@@ -126,7 +126,7 @@
 
 #### Tasks
 
-- [ ] **[M3-01]** `GET /api/posts` 커서 기반 페이지네이션 로직 추가
+- [x] **[M3-01]** `GET /api/posts` 커서 기반 페이지네이션 로직 추가
   - 파일: `frontend/app/api/posts/route.ts`
   - 예상 시간: 1h
   - 의존성: M1-01, M1-02
@@ -137,7 +137,7 @@
     - `mapRowToPost()`로 camelCase 변환 후 `PaginatedResponse<Post>` 형식 반환
     - `cursor` 없으면 첫 페이지 반환 (하위 호환)
 
-- [ ] **[M3-02]** `lib/api.ts`의 `getPosts()` 시그니처 변경
+- [x] **[M3-02]** `lib/api.ts`의 `getPosts()` 시그니처 변경
   - 파일: `frontend/lib/api.ts`
   - 예상 시간: 20m
   - 의존성: M1-01
@@ -145,7 +145,7 @@
     - `getPosts(params?: { category?: string; cursor?: string; limit?: number }): Promise<PaginatedResponse<Post>>` 시그니처로 변경
     - 쿼리 파라미터를 URL에 올바르게 추가
 
-- [ ] **[M3-03]** `PostListInfinite` 클라이언트 컴포넌트 구현
+- [x] **[M3-03]** `PostListInfinite` 클라이언트 컴포넌트 구현
   - 파일: `frontend/components/community/post-list-infinite.tsx` (신규)
   - 예상 시간: 2h
   - 의존성: M3-01, M3-02
@@ -158,7 +158,7 @@
     - `hasMore: false` 시 "모든 게시글을 확인했습니다" 문구 표시
     - 카테고리 전환 시 캐시 분리 및 첫 페이지부터 재조회
 
-- [ ] **[M3-04]** 커뮤니티 목록 페이지 하이브리드 렌더링 적용
+- [x] **[M3-04]** 커뮤니티 목록 페이지 하이브리드 렌더링 적용
   - 파일: `frontend/app/(main)/community/page.tsx`
   - 예상 시간: 30m
   - 의존성: M3-01, M3-03
@@ -183,7 +183,7 @@
 
 #### Tasks
 
-- [ ] **[M4-01]** `GET /api/reviews` 커서 기반 페이지네이션 로직 추가
+- [x] **[M4-01]** `GET /api/reviews` 커서 기반 페이지네이션 로직 추가
   - 파일: `frontend/app/api/reviews/route.ts`
   - 예상 시간: 1h
   - 의존성: M1-01, M1-02
@@ -194,14 +194,14 @@
     - `mapRowToReview()`로 camelCase 변환 후 `PaginatedResponse<Review>` 형식 반환
     - `cursor` 없으면 첫 페이지 반환 (하위 호환)
 
-- [ ] **[M4-02]** `lib/api.ts`의 `getReviews()` 시그니처 변경
+- [x] **[M4-02]** `lib/api.ts`의 `getReviews()` 시그니처 변경
   - 파일: `frontend/lib/api.ts`
   - 예상 시간: 20m
   - 의존성: M1-01
   - 완료 기준:
     - `getReviews(capsuleSlug: string, params?: { cursor?: string; limit?: number }): Promise<PaginatedResponse<Review>>` 시그니처로 변경
 
-- [ ] **[M4-03]** `ReviewListInfinite` 클라이언트 컴포넌트 구현
+- [x] **[M4-03]** `ReviewListInfinite` 클라이언트 컴포넌트 구현
   - 파일: `frontend/components/review/review-list-infinite.tsx` (신규)
   - 예상 시간: 1.5h
   - 의존성: M4-01, M4-02
@@ -214,7 +214,7 @@
     - `hasMore: false` 시 버튼 숨김
     - 리뷰 작성 성공 시 `queryClient.invalidateQueries(['reviews', capsuleSlug])` 호출
 
-- [ ] **[M4-04]** `review-form.tsx` onSuccess 콜백 방식 변경
+- [x] **[M4-04]** `review-form.tsx` onSuccess 콜백 방식 변경
   - 파일: `frontend/components/review/review-form.tsx`
   - 예상 시간: 15m
   - 의존성: 없음
@@ -223,7 +223,7 @@
     - 기존 `onSuccess` prop 콜백만 호출하도록 변경 (`onSuccess?.()` 유지)
     - `useRouter` import와 `router` 변수가 더 이상 필요 없으면 제거
 
-- [ ] **[M4-05]** 캡슐 상세 페이지 하이브리드 렌더링 적용
+- [x] **[M4-05]** 캡슐 상세 페이지 하이브리드 렌더링 적용
   - 파일: `frontend/app/(main)/capsules/[capsuleSlug]/page.tsx`
   - 예상 시간: 30m
   - 의존성: M4-01, M4-03, M4-04
@@ -296,4 +296,5 @@
 
 | 날짜       | 버전  | 변경 내용        | 작성자               |
 | ---------- | ----- | ---------------- | -------------------- |
+| 2026-03-17 | 2.1.0 | M1~M4 전체 태스크 완료 체크 (코드 검증 통과) | docs:update-roadmap skill |
 | 2026-03-16 | 2.0.0 | v2 로드맵 생성 (F020, F021, F022) | prd-to-roadmap agent |

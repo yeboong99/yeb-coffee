@@ -1,14 +1,16 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { PostList } from "@/components/community/post-list";
+import { PostListInfinite } from "@/components/community/post-list-infinite";
 import { CategoryTabs } from "@/components/community/category-tabs";
 import { PenSquare } from "lucide-react";
 import { createServerSupabaseClient } from "@/lib/supabase";
 import { mapRowToPost, type PostRow } from "@/lib/mappers";
-import type { Post } from "@/types";
+import type { Post, PaginatedResponse } from "@/types";
 
 // ISR: 60초마다 재검증
 export const revalidate = 60;
+
+const LIMIT = 10;
 
 interface Props {
   searchParams: Promise<{ category?: string }>;
@@ -19,13 +21,13 @@ export default async function CommunityPage({ searchParams }: Props) {
 
   const supabase = createServerSupabaseClient();
 
-  // 카테고리 필터 적용하여 게시글 조회
+  // 카테고리 필터 + limit+1 패턴으로 첫 페이지 조회
   const query = supabase
     .from("posts")
     .select("*")
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: false })
+    .limit(LIMIT + 1);
 
-  // 카테고리가 지정된 경우 필터 적용
   const { data, error } = category
     ? await query.eq("category", category)
     : await query;
@@ -40,14 +42,25 @@ export default async function CommunityPage({ searchParams }: Props) {
     );
   }
 
-  const posts: Post[] = (data as PostRow[]).map(mapRowToPost);
+  const rows = (data ?? []) as PostRow[];
+  const hasMore = rows.length > LIMIT;
+  const items = hasMore ? rows.slice(0, LIMIT) : rows;
+  const nextCursor = hasMore ? items[items.length - 1].created_at : null;
+
+  const initialData: PaginatedResponse<Post> = {
+    data: items.map(mapRowToPost),
+    nextCursor,
+    hasMore,
+  };
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-10">
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold mb-2">커뮤니티</h1>
-          <p className="text-muted-foreground">캡슐 커피에 대한 정보와 경험을 나눠보세요.</p>
+          <p className="text-muted-foreground">
+            캡슐 커피에 대한 정보와 경험을 나눠보세요.
+          </p>
         </div>
         <Button asChild>
           <Link href="/community/write">
@@ -60,8 +73,8 @@ export default async function CommunityPage({ searchParams }: Props) {
       {/* 카테고리 탭 - 클라이언트 컴포넌트 (URL searchParams 기반 탭 전환) */}
       <CategoryTabs />
 
-      {/* 서버에서 필터링된 게시글 목록 */}
-      <PostList posts={posts} />
+      {/* 하이브리드 SSR + 무한스크롤 게시글 목록 */}
+      <PostListInfinite initialData={initialData} category={category} />
     </div>
   );
 }

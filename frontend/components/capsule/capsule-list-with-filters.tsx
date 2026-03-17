@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useMemo } from 'react';
-import type { Capsule, IntensityLevel } from '@/types';
-import type { ServiceRating } from '@/types/review';
-import { CapsuleGrid } from './capsule-grid';
-import { CapsuleSearch } from './capsule-search';
-import { IntensityFilter } from './intensity-filter';
+import { useState, useMemo } from "react";
+import type { Capsule, IntensityLevel } from "@/types";
+import type { ServiceRating } from "@/types/review";
+import { CapsuleGrid } from "./capsule-grid";
+import { CapsuleSearch } from "./capsule-search";
+import { IntensityFilter } from "./intensity-filter";
 
 interface Props {
   capsules: Capsule[];
@@ -14,7 +14,7 @@ interface Props {
 }
 
 export function CapsuleListWithFilters({ capsules, serviceRatings }: Props) {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   // 이전 클릭 강도값 (범위 필터의 시작점)
   const [prevClick, setPrevClick] = useState<IntensityLevel | null>(null);
   // 마지막 클릭 강도값 (범위 필터의 끝점)
@@ -40,7 +40,7 @@ export function CapsuleListWithFilters({ capsules, serviceRatings }: Props) {
     // 이름 검색 필터 적용
     if (searchQuery.trim()) {
       result = result.filter((c) =>
-        c.name.toLowerCase().includes(searchQuery.toLowerCase())
+        c.name.toLowerCase().includes(searchQuery.toLowerCase()),
       );
     }
 
@@ -55,7 +55,7 @@ export function CapsuleListWithFilters({ capsules, serviceRatings }: Props) {
       const min = Math.min(prevClick, lastClick);
       const max = Math.max(prevClick, lastClick);
       result = result.filter(
-        (c) => c.intensity !== null && c.intensity >= min && c.intensity <= max
+        (c) => c.intensity !== null && c.intensity >= min && c.intensity <= max,
       );
     }
 
@@ -74,12 +74,15 @@ export function CapsuleListWithFilters({ capsules, serviceRatings }: Props) {
         />
       </div>
       {filteredCapsules.length > 0 ? (
-        <CapsuleGrid capsules={filteredCapsules} serviceRatings={serviceRatings} />
+        <CapsuleGrid
+          capsules={filteredCapsules}
+          serviceRatings={serviceRatings}
+        />
       ) : (
         <p className="text-center text-muted-foreground py-10">
           {searchQuery || lastClick !== null
-            ? '검색 조건에 맞는 캡슐이 없습니다.'
-            : '등록된 캡슐이 없습니다.'}
+            ? "검색 조건에 맞는 캡슐이 없습니다."
+            : "등록된 캡슐이 없습니다."}
         </p>
       )}
     </div>

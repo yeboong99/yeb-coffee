@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 export const reviewSchema = z.object({
   capsuleId: z.string().min(1),
@@ -12,7 +12,7 @@ export const reviewSchema = z.object({
 export const postSchema = z.object({
   title: z.string().min(2).max(100),
   content: z.string().min(10).max(5000),
-  category: z.enum(['정보공유', '추천', '질문', '잡담']),
+  category: z.enum(["정보공유", "추천", "질문", "잡담"]),
   authorNickname: z.string().min(1).max(20),
   turnstileToken: z.string().min(1),
 });

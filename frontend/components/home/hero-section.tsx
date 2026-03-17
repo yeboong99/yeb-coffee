@@ -8,7 +8,8 @@ export function HeroSection() {
         최고의 캡슐 커피를 찾아보세요
       </h1>
       <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
-        네스프레소, 돌체구스토, 버츄오 캡슐의 상세 정보와 커뮤니티 리뷰를 한곳에서 확인하세요.
+        네스프레소, 돌체구스토, 버츄오 캡슐의 상세 정보와 커뮤니티 리뷰를
+        한곳에서 확인하세요.
       </p>
       <div className="flex gap-4 justify-center">
         <Button asChild size="lg">

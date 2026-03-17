@@ -1,5 +1,10 @@
 import Link from "next/link";
-import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import type { Brand } from "@/types";
 
 interface BrandCardProps {
@@ -29,9 +34,7 @@ export function BrandCard({ brand }: BrandCardProps) {
             {brand.country && brand.capsuleCount > 0 && <span>·</span>}
             {brand.capsuleCount > 0 && <span>{brand.capsuleCount}종</span>}
           </div>
-          <CardDescription>
-            {brand.description}
-          </CardDescription>
+          <CardDescription>{brand.description}</CardDescription>
         </CardHeader>
       </Card>
     </Link>

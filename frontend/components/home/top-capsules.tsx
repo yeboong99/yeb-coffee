@@ -1,9 +1,9 @@
-import Link from 'next/link';
-import Image from 'next/image';
-import { Trophy } from 'lucide-react';
-import { getAllCapsules } from '@/lib/notion';
-import { createServerSupabaseClient } from '@/lib/supabase';
-import type { Capsule } from '@/types';
+import Link from "next/link";
+import Image from "next/image";
+import { Trophy } from "lucide-react";
+import { getAllCapsules } from "@/lib/notion";
+import { createServerSupabaseClient } from "@/lib/supabase";
+import type { Capsule } from "@/types";
 
 interface ReviewStat {
   capsule_slug: string;
@@ -16,8 +16,8 @@ async function fetchReviewStats(): Promise<ReviewStat[] | null> {
   try {
     const supabase = createServerSupabaseClient();
     const { data } = await supabase
-      .from('capsule_review_stats')
-      .select('capsule_slug, avg_rating, review_count');
+      .from("capsule_review_stats")
+      .select("capsule_slug, avg_rating, review_count");
     return (data as ReviewStat[]) ?? null;
   } catch {
     return null;
@@ -36,19 +36,30 @@ export async function TopCapsules() {
     allCapsules.length > 0
       ? [...allCapsules]
           .filter((c: Capsule) => c.coupangRating !== null)
-          .sort((a: Capsule, b: Capsule) => (b.coupangRating ?? 0) - (a.coupangRating ?? 0))
+          .sort(
+            (a: Capsule, b: Capsule) =>
+              (b.coupangRating ?? 0) - (a.coupangRating ?? 0),
+          )
           .slice(0, 5)
       : null;
 
   // 서비스 평점 Top 5 (review_count >= 5, avg_rating DESC)
-  const capsuleMap = new Map<string, Capsule>(allCapsules.map((c: Capsule) => [c.slug, c]));
+  const capsuleMap = new Map<string, Capsule>(
+    allCapsules.map((c: Capsule) => [c.slug, c]),
+  );
   const serviceTop5 = statsResult
     ? statsResult
         .filter((s: ReviewStat) => s.review_count >= 5)
         .sort((a: ReviewStat, b: ReviewStat) => b.avg_rating - a.avg_rating)
         .slice(0, 5)
-        .map((s: ReviewStat) => ({ stat: s, capsule: capsuleMap.get(s.capsule_slug) }))
-        .filter((item: { stat: ReviewStat; capsule: Capsule | undefined }) => item.capsule !== undefined)
+        .map((s: ReviewStat) => ({
+          stat: s,
+          capsule: capsuleMap.get(s.capsule_slug),
+        }))
+        .filter(
+          (item: { stat: ReviewStat; capsule: Capsule | undefined }) =>
+            item.capsule !== undefined,
+        )
     : null;
 
   return (
@@ -61,7 +72,9 @@ export async function TopCapsules() {
         {/* 쿠팡 평점 Top 5 */}
         {coupangTop5 !== null && (
           <div className="rounded-xl border bg-card p-5">
-            <h3 className="text-base font-semibold mb-4 pb-3 border-b">쿠팡 평점 Top 5</h3>
+            <h3 className="text-base font-semibold mb-4 pb-3 border-b">
+              쿠팡 평점 Top 5
+            </h3>
             <ol className="space-y-3">
               {coupangTop5.map((capsule: Capsule, i: number) => (
                 <li key={capsule.id}>
@@ -69,7 +82,9 @@ export async function TopCapsules() {
                     href={`/capsules/${capsule.slug}`}
                     className="flex items-center gap-3 p-3 rounded-lg hover:bg-muted transition-colors"
                   >
-                    <span className="text-lg font-bold text-muted-foreground w-6">{i + 1}</span>
+                    <span className="text-lg font-bold text-muted-foreground w-6">
+                      {i + 1}
+                    </span>
                     {capsule.imageUrl && (
                       <Image
                         src={capsule.imageUrl}
@@ -81,9 +96,13 @@ export async function TopCapsules() {
                     )}
                     <div className="flex-1 min-w-0">
                       <p className="font-medium truncate">{capsule.name}</p>
-                      <p className="text-sm text-muted-foreground">{capsule.brandName}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {capsule.brandName}
+                      </p>
                     </div>
-                    <span className="text-sm font-semibold">{capsule.coupangRating?.toFixed(1)}점</span>
+                    <span className="text-sm font-semibold">
+                      {capsule.coupangRating?.toFixed(1)}점
+                    </span>
                   </Link>
                 </li>
               ))}
@@ -92,7 +111,9 @@ export async function TopCapsules() {
         )}
         {/* 서비스 평점 Top 5 */}
         <div className="rounded-xl border bg-card p-5">
-          <h3 className="text-base font-semibold mb-4 pb-3 border-b">서비스 평점 Top 5</h3>
+          <h3 className="text-base font-semibold mb-4 pb-3 border-b">
+            서비스 평점 Top 5
+          </h3>
           {serviceTop5 === null || serviceTop5.length === 0 ? (
             <p className="text-muted-foreground text-sm py-8 text-center">
               아직 충분한 리뷰가 없습니다.
@@ -110,7 +131,9 @@ export async function TopCapsules() {
                         href={`/capsules/${item.capsule.slug}`}
                         className="flex items-center gap-3 p-3 rounded-lg hover:bg-muted transition-colors"
                       >
-                        <span className="text-lg font-bold text-muted-foreground w-6">{i + 1}</span>
+                        <span className="text-lg font-bold text-muted-foreground w-6">
+                          {i + 1}
+                        </span>
                         {item.capsule.imageUrl && (
                           <Image
                             src={item.capsule.imageUrl}
@@ -121,8 +144,12 @@ export async function TopCapsules() {
                           />
                         )}
                         <div className="flex-1 min-w-0">
-                          <p className="font-medium truncate">{item.capsule.name}</p>
-                          <p className="text-sm text-muted-foreground">{item.capsule.brandName}</p>
+                          <p className="font-medium truncate">
+                            {item.capsule.name}
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            {item.capsule.brandName}
+                          </p>
                         </div>
                         <span className="text-sm font-semibold">
                           {item.stat.avg_rating.toFixed(1)}점

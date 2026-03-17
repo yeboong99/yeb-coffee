@@ -14,8 +14,14 @@ import { createComment } from "@/lib/api";
 import { toast } from "sonner";
 
 const formSchema = z.object({
-  authorNickname: z.string().min(1, "닉네임을 입력해주세요.").max(20, "20자 이하로 입력해주세요."),
-  content: z.string().min(1, "내용을 입력해주세요.").max(500, "500자 이하로 입력해주세요."),
+  authorNickname: z
+    .string()
+    .min(1, "닉네임을 입력해주세요.")
+    .max(20, "20자 이하로 입력해주세요."),
+  content: z
+    .string()
+    .min(1, "내용을 입력해주세요.")
+    .max(500, "500자 이하로 입력해주세요."),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -74,12 +80,18 @@ export function CommentForm({ postId, onSuccess }: CommentFormProps) {
         <Label>닉네임</Label>
         <Input {...register("authorNickname")} placeholder="닉네임 입력" />
         {errors.authorNickname && (
-          <p className="text-sm text-destructive">{errors.authorNickname.message}</p>
+          <p className="text-sm text-destructive">
+            {errors.authorNickname.message}
+          </p>
         )}
       </div>
       <div className="space-y-1.5">
         <Label>댓글</Label>
-        <Textarea {...register("content")} placeholder="댓글을 입력해주세요." rows={3} />
+        <Textarea
+          {...register("content")}
+          placeholder="댓글을 입력해주세요."
+          rows={3}
+        />
         {errors.content && (
           <p className="text-sm text-destructive">{errors.content.message}</p>
         )}
@@ -99,7 +111,11 @@ export function CommentForm({ postId, onSuccess }: CommentFormProps) {
         />
       </div>
 
-      <Button type="submit" disabled={isSubmitting || !turnstileToken} className="w-full">
+      <Button
+        type="submit"
+        disabled={isSubmitting || !turnstileToken}
+        className="w-full"
+      >
         {isSubmitting ? "등록 중..." : "댓글 등록"}
       </Button>
     </form>

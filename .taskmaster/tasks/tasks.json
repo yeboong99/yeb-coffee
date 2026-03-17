@@ -88,11 +88,12 @@
           "14",
           "16"
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [],
         "complexity": 1,
         "recommendedSubtasks": 0,
-        "expansionPrompt": "frontend/app/(main)/page.tsx에 TopCapsules import를 추가하고, BrandShowcase 아래 PopularPosts 위에 <TopCapsules /> 컴포넌트를 삽입하세요. 현재 page.tsx는 38줄의 단순한 파일로, JSX 구조에 컴포넌트 한 줄 추가와 import 한 줄 추가로 완료됩니다."
+        "expansionPrompt": "frontend/app/(main)/page.tsx에 TopCapsules import를 추가하고, BrandShowcase 아래 PopularPosts 위에 <TopCapsules /> 컴포넌트를 삽입하세요. 현재 page.tsx는 38줄의 단순한 파일로, JSX 구조에 컴포넌트 한 줄 추가와 import 한 줄 추가로 완료됩니다.",
+        "updatedAt": "2026-03-17T02:10:54.384Z"
       },
       {
         "id": "18",
@@ -105,11 +106,12 @@
           "12",
           "13"
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [],
         "complexity": 4,
         "recommendedSubtasks": 3,
-        "expansionPrompt": "frontend/app/api/posts/route.ts의 GET 함수를 수정하세요. 구현 단계: 1) cursor, limit 쿼리 파라미터 파싱 추가(limit 최대 50 제한), 2) cursor가 있으면 .lt('created_at', cursor) 조건 추가, 3) N+1 패턴(limit+1 조회)으로 hasMore 판별 후 PaginatedResponse<Post> 형식으로 응답. 기존 POST 핸들러는 그대로 유지하고 GET 핸들러만 수정합니다."
+        "expansionPrompt": "frontend/app/api/posts/route.ts의 GET 함수를 수정하세요. 구현 단계: 1) cursor, limit 쿼리 파라미터 파싱 추가(limit 최대 50 제한), 2) cursor가 있으면 .lt('created_at', cursor) 조건 추가, 3) N+1 패턴(limit+1 조회)으로 hasMore 판별 후 PaginatedResponse<Post> 형식으로 응답. 기존 POST 핸들러는 그대로 유지하고 GET 핸들러만 수정합니다.",
+        "updatedAt": "2026-03-17T02:41:32.016Z"
       },
       {
         "id": "19",
@@ -121,11 +123,12 @@
         "dependencies": [
           "12"
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [],
         "complexity": 2,
         "recommendedSubtasks": 0,
-        "expansionPrompt": "frontend/lib/api.ts의 getPosts() 함수를 PaginatedResponse<Post> 반환 타입과 커서 기반 파라미터로 변경하세요. 현재 getPosts(category?: string): Promise<Post[]>를 getPosts(params?: {category?, cursor?, limit?}): Promise<PaginatedResponse<Post>>로 변경하고, URLSearchParams를 이용한 URL 조합 로직을 구현합니다. PaginatedResponse는 types/index.ts에 이미 정의되어 있습니다."
+        "expansionPrompt": "frontend/lib/api.ts의 getPosts() 함수를 PaginatedResponse<Post> 반환 타입과 커서 기반 파라미터로 변경하세요. 현재 getPosts(category?: string): Promise<Post[]>를 getPosts(params?: {category?, cursor?, limit?}): Promise<PaginatedResponse<Post>>로 변경하고, URLSearchParams를 이용한 URL 조합 로직을 구현합니다. PaginatedResponse는 types/index.ts에 이미 정의되어 있습니다.",
+        "updatedAt": "2026-03-17T02:46:27.980Z"
       },
       {
         "id": "20",
@@ -138,11 +141,12 @@
           "18",
           "19"
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [],
         "complexity": 6,
         "recommendedSubtasks": 4,
-        "expansionPrompt": "frontend/components/community/post-list-infinite.tsx를 신규 생성하세요. 구현 단계: 1) useInfiniteQuery 설정(queryKey에 category 포함, initialData 주입, getNextPageParam 구현), 2) IntersectionObserver를 이용한 하단 감지 + fetchNextPage 트리거, 3) Skeleton 로딩 UI(isFetchingNextPage 시 3개), 4) 모든 게시글 로드 완료 메시지(hasNextPage false + posts.length > 0). PostCard 컴포넌트는 이미 존재합니다."
+        "expansionPrompt": "frontend/components/community/post-list-infinite.tsx를 신규 생성하세요. 구현 단계: 1) useInfiniteQuery 설정(queryKey에 category 포함, initialData 주입, getNextPageParam 구현), 2) IntersectionObserver를 이용한 하단 감지 + fetchNextPage 트리거, 3) Skeleton 로딩 UI(isFetchingNextPage 시 3개), 4) 모든 게시글 로드 완료 메시지(hasNextPage false + posts.length > 0). PostCard 컴포넌트는 이미 존재합니다.",
+        "updatedAt": "2026-03-17T02:52:06.224Z"
       },
       {
         "id": "21",
@@ -155,11 +159,12 @@
           "18",
           "20"
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [],
         "complexity": 4,
         "recommendedSubtasks": 3,
-        "expansionPrompt": "frontend/app/(main)/community/page.tsx를 수정하세요. 구현 단계: 1) Supabase 쿼리에 limit(LIMIT+1) 패턴 추가하여 hasMore 판별, 2) PaginatedResponse<Post> 형식의 initialData 구성, 3) <PostList posts={posts} />를 <PostListInfinite initialData={initialData} category={category} />로 교체 및 import 변경. 현재 파일은 67줄로 단순하며, 태스크 14에서 이미 mapRowToPost import가 처리된 상태입니다."
+        "expansionPrompt": "frontend/app/(main)/community/page.tsx를 수정하세요. 구현 단계: 1) Supabase 쿼리에 limit(LIMIT+1) 패턴 추가하여 hasMore 판별, 2) PaginatedResponse<Post> 형식의 initialData 구성, 3) <PostList posts={posts} />를 <PostListInfinite initialData={initialData} category={category} />로 교체 및 import 변경. 현재 파일은 67줄로 단순하며, 태스크 14에서 이미 mapRowToPost import가 처리된 상태입니다.",
+        "updatedAt": "2026-03-17T02:57:45.478Z"
       },
       {
         "id": "22",
@@ -172,11 +177,12 @@
           "12",
           "13"
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [],
         "complexity": 4,
         "recommendedSubtasks": 3,
-        "expansionPrompt": "frontend/app/api/reviews/route.ts의 GET 함수를 수정하세요. 구현 단계: 1) cursor, limit 파라미터 파싱(기본값 5, 최대 20), 2) cursor가 있으면 .lt('created_at', cursor) 조건 추가, 3) N+1 패턴(limit+1 조회)으로 hasMore 판별 후 PaginatedResponse<Review> 형식으로 응답. 태스크 18(posts 페이지네이션)과 동일한 패턴이므로 해당 구현을 참고합니다."
+        "expansionPrompt": "frontend/app/api/reviews/route.ts의 GET 함수를 수정하세요. 구현 단계: 1) cursor, limit 파라미터 파싱(기본값 5, 최대 20), 2) cursor가 있으면 .lt('created_at', cursor) 조건 추가, 3) N+1 패턴(limit+1 조회)으로 hasMore 판별 후 PaginatedResponse<Review> 형식으로 응답. 태스크 18(posts 페이지네이션)과 동일한 패턴이므로 해당 구현을 참고합니다.",
+        "updatedAt": "2026-03-17T02:51:36.504Z"
       },
       {
         "id": "23",
@@ -188,11 +194,12 @@
         "dependencies": [
           "12"
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [],
         "complexity": 2,
         "recommendedSubtasks": 0,
-        "expansionPrompt": "frontend/lib/api.ts의 getReviews() 함수를 PaginatedResponse<Review> 반환 타입과 선택적 cursor/limit 파라미터로 변경하세요. 현재 getReviews(capsuleSlug: string): Promise<Review[]>를 getReviews(capsuleSlug: string, params?: {cursor?, limit?}): Promise<PaginatedResponse<Review>>로 변경하고, URLSearchParams로 URL을 조합합니다. 태스크 19(getPosts 변경)와 동일한 패턴입니다."
+        "expansionPrompt": "frontend/lib/api.ts의 getReviews() 함수를 PaginatedResponse<Review> 반환 타입과 선택적 cursor/limit 파라미터로 변경하세요. 현재 getReviews(capsuleSlug: string): Promise<Review[]>를 getReviews(capsuleSlug: string, params?: {cursor?, limit?}): Promise<PaginatedResponse<Review>>로 변경하고, URLSearchParams로 URL을 조합합니다. 태스크 19(getPosts 변경)와 동일한 패턴입니다.",
+        "updatedAt": "2026-03-17T02:57:32.431Z"
       },
       {
         "id": "24",
@@ -202,11 +209,12 @@
         "testStrategy": "1. `npm run typecheck`로 타입 에러 없음 확인\n2. review-form.tsx에서 useRouter import와 router 변수가 완전히 제거되었는지 확인\n3. 리뷰 제출 후 router.refresh() 없이 onSuccess 콜백만 호출되는지 확인\n4. `npm run build` 빌드 성공 확인",
         "priority": "medium",
         "dependencies": [],
-        "status": "pending",
+        "status": "done",
         "subtasks": [],
         "complexity": 1,
         "recommendedSubtasks": 0,
-        "expansionPrompt": "frontend/components/review/review-form.tsx의 onSubmit 핸들러에서 router.refresh() 호출(line 71)을 제거하고, 연관된 useRouter import(line 4)와 const router 선언(line 32)도 함께 제거하세요. onSuccess?.() 콜백은 그대로 유지합니다."
+        "expansionPrompt": "frontend/components/review/review-form.tsx의 onSubmit 핸들러에서 router.refresh() 호출(line 71)을 제거하고, 연관된 useRouter import(line 4)와 const router 선언(line 32)도 함께 제거하세요. onSuccess?.() 콜백은 그대로 유지합니다.",
+        "updatedAt": "2026-03-17T03:00:55.234Z"
       },
       {
         "id": "25",
@@ -220,11 +228,12 @@
           "23",
           "24"
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [],
         "complexity": 6,
         "recommendedSubtasks": 4,
-        "expansionPrompt": "frontend/components/review/review-list-infinite.tsx를 신규 생성하세요. 구현 단계: 1) useInfiniteQuery 설정(queryKey ['reviews', capsuleSlug], initialData 주입, getNextPageParam 구현), 2) 리뷰 목록 렌더링(StarRating, Separator 재사용, 기존 review-list.tsx의 UI 패턴 참고), 3) '더보기' 버튼 구현(Button + Loader2 스피너, isFetchingNextPage 상태 반영), 4) ReviewForm 내장 및 handleReviewSuccess에서 queryClient.invalidateQueries 호출."
+        "expansionPrompt": "frontend/components/review/review-list-infinite.tsx를 신규 생성하세요. 구현 단계: 1) useInfiniteQuery 설정(queryKey ['reviews', capsuleSlug], initialData 주입, getNextPageParam 구현), 2) 리뷰 목록 렌더링(StarRating, Separator 재사용, 기존 review-list.tsx의 UI 패턴 참고), 3) '더보기' 버튼 구현(Button + Loader2 스피너, isFetchingNextPage 상태 반영), 4) ReviewForm 내장 및 handleReviewSuccess에서 queryClient.invalidateQueries 호출.",
+        "updatedAt": "2026-03-17T03:10:34.456Z"
       },
       {
         "id": "26",
@@ -237,11 +246,12 @@
           "22",
           "25"
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [],
         "complexity": 5,
         "recommendedSubtasks": 3,
-        "expansionPrompt": "frontend/app/(main)/capsules/[capsuleSlug]/page.tsx를 수정하세요. 구현 단계: 1) Supabase로 리뷰 첫 5개 직접 조회(limit+1 패턴), PaginatedResponse<Review> 형식의 initialReviews 구성, 2) 기존 Suspense + ReviewList + ReviewForm 블록을 <ReviewListInfinite capsuleId={...} capsuleSlug={...} initialData={initialReviews} />로 교체, 3) 불필요해진 ReviewList, ReviewForm import 제거. ReviewListInfinite(태스크 25) 구현 완료가 선행되어야 합니다."
+        "expansionPrompt": "frontend/app/(main)/capsules/[capsuleSlug]/page.tsx를 수정하세요. 구현 단계: 1) Supabase로 리뷰 첫 5개 직접 조회(limit+1 패턴), PaginatedResponse<Review> 형식의 initialReviews 구성, 2) 기존 Suspense + ReviewList + ReviewForm 블록을 <ReviewListInfinite capsuleId={...} capsuleSlug={...} initialData={initialReviews} />로 교체, 3) 불필요해진 ReviewList, ReviewForm import 제거. ReviewListInfinite(태스크 25) 구현 완료가 선행되어야 합니다.",
+        "updatedAt": "2026-03-17T03:15:14.093Z"
       },
       {
         "id": "27",
@@ -255,18 +265,19 @@
           "21",
           "26"
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [],
         "complexity": 3,
         "recommendedSubtasks": 3,
-        "expansionPrompt": "v2 기능 구현 완료 후 최종 검증을 수행하세요. 단계: 1) npm run check-all(typecheck + lint + format) 실행 및 모든 에러 수정, 2) npm run build 빌드 성공 확인 및 빌드 에러 해결, 3) 로컬 개발 서버에서 홈 페이지(TopCapsules 섹션), 커뮤니티(무한 스크롤), 캡슐 상세(리뷰 더보기) 시나리오별 동작 검증 및 기존 F001~F012 기능 회귀 테스트. 빌드 에러가 발생하면 해당 태스크로 돌아가 수정합니다."
+        "expansionPrompt": "v2 기능 구현 완료 후 최종 검증을 수행하세요. 단계: 1) npm run check-all(typecheck + lint + format) 실행 및 모든 에러 수정, 2) npm run build 빌드 성공 확인 및 빌드 에러 해결, 3) 로컬 개발 서버에서 홈 페이지(TopCapsules 섹션), 커뮤니티(무한 스크롤), 캡슐 상세(리뷰 더보기) 시나리오별 동작 검증 및 기존 F001~F012 기능 회귀 테스트. 빌드 에러가 발생하면 해당 태스크로 돌아가 수정합니다.",
+        "updatedAt": "2026-03-17T03:43:31.518Z"
       }
     ],
     "metadata": {
       "version": "1.0.0",
-      "lastModified": "2026-03-16T14:33:28.338Z",
+      "lastModified": "2026-03-17T03:43:31.518Z",
       "taskCount": 16,
-      "completedCount": 5,
+      "completedCount": 16,
       "tags": [
         "master"
       ]

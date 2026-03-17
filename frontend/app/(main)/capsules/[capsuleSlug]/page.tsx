@@ -1,16 +1,15 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Skeleton } from "@/components/ui/skeleton";
 import { CapsuleDetail } from "@/components/capsule/capsule-detail";
-import { ReviewList } from "@/components/review/review-list";
-import { ReviewForm } from "@/components/review/review-form";
+import { ReviewListInfinite } from "@/components/review/review-list-infinite";
 import { ChevronLeft } from "lucide-react";
 import { getCapsuleBySlug } from "@/lib/notion";
-import { getServiceRating } from "@/lib/supabase";
+import { getServiceRating, createServerSupabaseClient } from "@/lib/supabase";
+import { mapRowToReview, type ReviewRow } from "@/lib/mappers";
+import type { PaginatedResponse, Review } from "@/types";
 
 // ISR: 1시간마다 재검증
 export const revalidate = 3600;
@@ -52,6 +51,31 @@ export default async function CapsulePage({ params }: Props) {
   // 커뮤니티 서비스 평점 단건 조회
   const serviceRating = await getServiceRating(capsuleSlug);
 
+  // 서버 사이드에서 초기 리뷰 프리페치 (HTTP 홉 없이 Supabase 직접 쿼리)
+  const REVIEW_LIMIT = 5;
+  const supabaseServer = createServerSupabaseClient();
+  const { data: reviewData } = await supabaseServer
+    .from("reviews")
+    .select("*")
+    .eq("capsule_slug", capsuleSlug)
+    .order("created_at", { ascending: false })
+    .limit(REVIEW_LIMIT + 1); // N+1 패턴으로 hasMore 판별
+
+  const reviewRows = (reviewData ?? []) as ReviewRow[];
+  const hasMoreReviews = reviewRows.length > REVIEW_LIMIT;
+  const reviewItems = hasMoreReviews
+    ? reviewRows.slice(0, REVIEW_LIMIT)
+    : reviewRows;
+  const reviewNextCursor = hasMoreReviews
+    ? reviewItems[reviewItems.length - 1].created_at
+    : null;
+
+  const initialReviews: PaginatedResponse<Review> = {
+    data: reviewItems.map(mapRowToReview),
+    nextCursor: reviewNextCursor,
+    hasMore: hasMoreReviews,
+  };
+
   return (
     <div className="mx-auto max-w-3xl px-4 py-10">
       <Button asChild variant="ghost" className="mb-6 -ml-2">
@@ -65,31 +89,11 @@ export default async function CapsulePage({ params }: Props) {
 
       <Separator className="my-10" />
 
-      <section>
-        {/* Suspense로 감싸서 리뷰 로딩 중 Skeleton fallback 표시 */}
-        <Suspense
-          fallback={
-            <div className="space-y-4">
-              {Array.from({ length: 3 }).map((_, i) => (
-                <div key={i} className="space-y-2">
-                  <Skeleton className="h-5 w-32" />
-                  <Skeleton className="h-4 w-full" />
-                  <Skeleton className="h-4 w-3/4" />
-                </div>
-              ))}
-            </div>
-          }
-        >
-          <ReviewList capsuleSlug={capsule.slug} />
-        </Suspense>
-      </section>
-
-      <Separator className="my-10" />
-
-      <section>
-        <h2 className="text-xl font-bold mb-6">리뷰 작성</h2>
-        <ReviewForm capsuleId={capsule.id} capsuleSlug={capsule.slug} />
-      </section>
+      <ReviewListInfinite
+        capsuleId={capsule.id}
+        capsuleSlug={capsule.slug}
+        initialData={initialReviews}
+      />
     </div>
   );
 }

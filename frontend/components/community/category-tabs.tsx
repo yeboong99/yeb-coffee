@@ -5,7 +5,13 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { PostCategory } from "@/types";
 
 // 카테고리 목록
-const CATEGORIES: (PostCategory | "전체")[] = ["전체", "정보공유", "추천", "질문", "잡담"];
+const CATEGORIES: (PostCategory | "전체")[] = [
+  "전체",
+  "정보공유",
+  "추천",
+  "질문",
+  "잡담",
+];
 
 /**
  * 카테고리 탭 클라이언트 컴포넌트

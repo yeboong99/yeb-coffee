@@ -34,9 +34,10 @@ export function StarRating({
           className={cn(
             sizeClass,
             "leading-none",
-            interactive && "cursor-pointer hover:scale-110 transition-transform",
+            interactive &&
+              "cursor-pointer hover:scale-110 transition-transform",
             !interactive && "cursor-default",
-            star <= value ? "text-yellow-400" : "text-muted-foreground/30"
+            star <= value ? "text-yellow-400" : "text-muted-foreground/30",
           )}
           aria-label={`${star}점`}
         >

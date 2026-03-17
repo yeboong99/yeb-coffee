@@ -30,7 +30,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return {
     title: brand.name,
-    description: brand.description || `${brand.name}의 캡슐 커피 라인업을 확인하세요.`,
+    description:
+      brand.description || `${brand.name}의 캡슐 커피 라인업을 확인하세요.`,
   };
 }
 
@@ -48,9 +49,8 @@ export default async function BrandPage({ params }: Props) {
 
   // 커뮤니티 서비스 평점 일괄 조회 (슬러그 배열로 한 번에 요청)
   const capsuleSlugs = capsules.map((c) => c.slug);
-  const serviceRatings = capsuleSlugs.length > 0
-    ? await getServiceRatings(capsuleSlugs)
-    : {};
+  const serviceRatings =
+    capsuleSlugs.length > 0 ? await getServiceRatings(capsuleSlugs) : {};
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">
@@ -76,7 +76,10 @@ export default async function BrandPage({ params }: Props) {
         <p className="text-muted-foreground">{brand.description}</p>
       </div>
 
-      <CapsuleListWithFilters capsules={capsules} serviceRatings={serviceRatings} />
+      <CapsuleListWithFilters
+        capsules={capsules}
+        serviceRatings={serviceRatings}
+      />
     </div>
   );
 }

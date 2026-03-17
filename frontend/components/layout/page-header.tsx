@@ -32,7 +32,9 @@ export function PageHeader({ title, description, crumbs }: PageHeaderProps) {
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>
                   {crumb.href ? (
-                    <BreadcrumbLink href={crumb.href}>{crumb.label}</BreadcrumbLink>
+                    <BreadcrumbLink href={crumb.href}>
+                      {crumb.label}
+                    </BreadcrumbLink>
                   ) : (
                     <BreadcrumbPage>{crumb.label}</BreadcrumbPage>
                   )}

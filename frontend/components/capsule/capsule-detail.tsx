@@ -25,7 +25,9 @@ export function CapsuleDetail({ capsule, serviceRating }: CapsuleDetailProps) {
       <div>
         <div className="flex items-start gap-3 mb-2">
           <h1 className="text-3xl font-bold">{capsule.name}</h1>
-          {capsule.isLimitedEdition && <Badge variant="secondary">한정판</Badge>}
+          {capsule.isLimitedEdition && (
+            <Badge variant="secondary">한정판</Badge>
+          )}
           {capsule.isDiscontinued && <Badge variant="destructive">단종</Badge>}
         </div>
         <p className="text-muted-foreground">{capsule.brandName}</p>
@@ -59,7 +61,8 @@ export function CapsuleDetail({ capsule, serviceRating }: CapsuleDetailProps) {
         {/* 커뮤니티 평점 (Supabase 집계) */}
         <div className="space-y-1">
           <p className="text-sm text-muted-foreground">커뮤니티 평점</p>
-          {serviceRating?.avgRating !== null && serviceRating?.avgRating !== undefined ? (
+          {serviceRating?.avgRating !== null &&
+          serviceRating?.avgRating !== undefined ? (
             <p className="font-semibold">
               ★ {serviceRating.avgRating.toFixed(1)} / 5
             </p>
@@ -74,7 +77,8 @@ export function CapsuleDetail({ capsule, serviceRating }: CapsuleDetailProps) {
           <p className="font-semibold">
             {serviceRating !== undefined
               ? serviceRating.reviewCount
-              : capsule.reviewCount}개
+              : capsule.reviewCount}
+            개
           </p>
         </div>
       </div>
@@ -84,7 +88,9 @@ export function CapsuleDetail({ capsule, serviceRating }: CapsuleDetailProps) {
           <p className="text-sm font-medium">향미</p>
           <div className="flex flex-wrap gap-2">
             {capsule.flavorNotes.map((note) => (
-              <Badge key={note} variant="outline">{note}</Badge>
+              <Badge key={note} variant="outline">
+                {note}
+              </Badge>
             ))}
           </div>
         </div>

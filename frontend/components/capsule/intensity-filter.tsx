@@ -3,7 +3,22 @@
 import { Button } from "@/components/ui/button";
 import type { IntensityLevel } from "@/types";
 
-const intensityOptions: (IntensityLevel | null)[] = [null, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
+const intensityOptions: (IntensityLevel | null)[] = [
+  null,
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11,
+  12,
+  13,
+];
 
 interface IntensityFilterProps {
   rangeStart: IntensityLevel | null;
@@ -11,7 +26,11 @@ interface IntensityFilterProps {
   onSelect: (value: IntensityLevel | null) => void;
 }
 
-export function IntensityFilter({ rangeStart, rangeEnd, onSelect }: IntensityFilterProps) {
+export function IntensityFilter({
+  rangeStart,
+  rangeEnd,
+  onSelect,
+}: IntensityFilterProps) {
   // 특정 강도값 버튼이 활성 상태인지 판단
   const isActive = (value: IntensityLevel): boolean => {
     if (rangeStart === null && rangeEnd === null) {
@@ -40,8 +59,12 @@ export function IntensityFilter({ rangeStart, rangeEnd, onSelect }: IntensityFil
             key={level ?? "all"}
             variant={
               level === null
-                ? isAllActive ? "default" : "outline"
-                : isActive(level) ? "default" : "outline"
+                ? isAllActive
+                  ? "default"
+                  : "outline"
+                : isActive(level)
+                  ? "default"
+                  : "outline"
             }
             size="sm"
             onClick={() => onSelect(level)}

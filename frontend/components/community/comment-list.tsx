@@ -64,7 +64,9 @@ export async function CommentList({ postId }: CommentListProps) {
         <div key={comment.id}>
           <div className="py-4 space-y-1">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium">{comment.authorNickname}</span>
+              <span className="text-sm font-medium">
+                {comment.authorNickname}
+              </span>
               <time className="text-xs text-muted-foreground">
                 {new Date(comment.createdAt).toLocaleDateString("ko-KR")}
               </time>

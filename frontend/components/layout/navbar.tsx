@@ -49,7 +49,7 @@ export function Navbar() {
                 "px-3 py-1.5 rounded-md text-sm transition-colors hover:text-foreground hover:bg-accent",
                 pathname === href || pathname.startsWith(href + "/")
                   ? "text-foreground font-medium bg-accent"
-                  : "text-muted-foreground"
+                  : "text-muted-foreground",
               )}
             >
               {label}
@@ -84,7 +84,7 @@ export function Navbar() {
                       "px-3 py-2 rounded-md text-sm transition-colors hover:bg-accent",
                       pathname === href || pathname.startsWith(href + "/")
                         ? "font-medium bg-accent"
-                        : "text-muted-foreground"
+                        : "text-muted-foreground",
                     )}
                   >
                     {label}
