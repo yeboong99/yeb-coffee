@@ -8,9 +8,12 @@ export function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
+  /* eslint-disable react-hooks/set-state-in-effect */
+  // 하이드레이션 불일치 방지를 위한 마운트 감지 패턴 (next-themes 표준 관용구)
   useEffect(() => {
     setMounted(true);
   }, []);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   const isDark = mounted && resolvedTheme === "dark";
 

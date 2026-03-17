@@ -17,7 +17,10 @@ export default async function HomePage() {
 
   // 최근 7일 이내 게시글 중 조회수 상위 5개 조회
   const supabase = createServerSupabaseClient();
-  const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+  // eslint-disable-next-line react-hooks/purity -- 서버 컴포넌트(async function)에서 Date.now()는 안전하게 사용 가능
+  const sevenDaysAgo = new Date(
+    Date.now() - 7 * 24 * 60 * 60 * 1000,
+  ).toISOString();
 
   const { data, error } = await supabase
     .from("posts")
